@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config Editor for Uptime Kuma Probe Extension</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="config.js"></script>
+    <script src='https://cdn.jsdelivr.net/gh/K-cermak/Enplated-Framework@enp-v3/enp-loader.min.js'></script>
+    <script src="script.js" defer></script>
+    <script src="modals.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="mx-4">
+    <div class="d-flex mt-3 justify-content-center align-items-center mt-4">
+        <h1 class="mt-0">Config Editor for Uptime Kuma Probe Extension</h1>
+        <a href="https://github.com/K-cermak/UptimeKuma-Probe" target="_blank" class="btn btn-secondary mx-2"><i class="bi bi-github"></i> GitHub</a>
+        <a href="https://github.com/K-cermak/UptimeKuma-Probe/TODO" target="_blank" class="btn btn-primary mx-2"><i class="bi bi-book"></i> Documentation</a>
+    </div>
+
+    <div class="d-flex justify-content-center mt-5 mb-4">
+        <button class="btn btn-secondary mx-2" id="load"><i class="bi bi-upload"></i> TODO Load Config</button>
+        <button class="btn btn-primary mx-2" id="save"><i class="bi bi-download"></i> TODO Download Config</button>
+        <button class="btn btn-warning mx-2" id="check"><i class="bi bi-check-circle"></i> TODO Verify Config</button>
+    </div>
+
+    <table class="table container" id="config">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">
+                    Name
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="The name of the scan. Lower case letters, numbers or underscores only. Must be unique.">
+                        <i class="bi bi-question-circle"></i>
+                    </span>
+                </th>
+                <th scope="col">
+                    Name
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Ping - ICMP ping, HTTP - HTTP/s request.">
+                        <i class="bi bi-question-circle"></i>
+                    </span>
+                </th>
+                <th scope="col">
+                    Address
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Address for scan. Supports domain names, IPv4 and IPv6.">
+                        <i class="bi bi-question-circle"></i>
+                    </span>
+                </th>
+                <th scope="col">
+                    Timeout
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Timeout in ms. If exceeded, the scan is aborted and the service is declared as unavailable. Only integer range 0-29999. 0 means unlimited (not recommended).">
+                        <i class="bi bi-question-circle"></i>
+                    </span></th>
+                <th scope="col">Status Codes
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Comma separated list of status codes that are considered as successful.">
+                        <i class="bi bi-question-circle"></i>
+                    </span>
+                </th>
+                <th scope="col">Keyword
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Keyword that must be present in the response.">
+                        <i class="bi bi-question-circle"></i>
+                    </span>
+                </th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="d-flex justify-content-center mt-3 mb-4">
+        <button class="btn btn-primary mx-2" id="add"><i class="bi bi-plus"></i> TODO Add Row</button>
+    </div>
+
+    //TODO action when changed
+
+</body>
+</html>
