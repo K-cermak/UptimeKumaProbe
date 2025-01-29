@@ -236,7 +236,6 @@ function verifyCheck() {
         } while (false);
     }
 
-    console.log("NEW CHECK");
     if (check_ok) {
         errorArea.classList.add("d-none");
     } else {
