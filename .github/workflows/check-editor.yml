@@ -1,0 +1,39 @@
+name: Check Web Editor File Modification Dates
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check-dates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compare file dates
+        run: |
+          REFERENCE_FILE="web-editor/probe-editor.html"
+          FILES_TO_COMPARE=(
+            "web-editor/src/config.js"
+            "web-editor/src/index.html"
+            "web-editor/src/modals.js"
+            "web-editor/src/script.js"
+          )
+
+          REF_DATE=$(git log -1 --format=%ct -- "$REFERENCE_FILE" || echo 0)
+
+          echo "$REFERENCE_FILE last modified: $REF_DATE"
+
+          for file in "${FILES_TO_COMPARE[@]}"; do
+            FILE_DATE=$(git log -1 --format=%ct -- "$file" || echo 0)
+            echo "$file last modified: $FILE_DATE"
+
+            if [ "$FILE_DATE" -gt "$REF_DATE" ]; then
+              echo "❌ $file is newer than $REFERENCE_FILE. Test failed."
+              exit 1
+            fi
+          done
+
+          echo "✅ All files are older than $REFERENCE_FILE. Test passed."
