@@ -20,8 +20,13 @@
 
     <div class="d-flex justify-content-center mt-5 mb-4">
         <button class="btn btn-secondary mx-2" id="load"><i class="bi bi-upload"></i> Load Config</button>
-        <button class="btn btn-primary mx-2" id="save"><i class="bi bi-download"></i> Download Config</button>
+        <button class="btn btn-primary mx-2" id="downloadConfig"><i class="bi bi-download"></i> Download Config</button>
         <button class="btn btn-warning mx-2" id="verifyConfig"><i class="bi"></i> <span></span></button>
+    </div>
+
+    <div class="alert alert-warning container d-none" id="errorArea" role="alert">
+        <h4 class="alert-heading"><i class="bi bi-exclamation-circle me-2"></i> Errors:</h4>
+        <ul id="errorList"></ul>
     </div>
 
     <table class="table container" id="config">
@@ -70,10 +75,5 @@
     <div class="d-flex justify-content-center mt-3 mb-4">
         <button class="btn btn-primary mx-2" id="addRow"><i class="bi bi-plus"></i> Add Row</button>
     </div>
-
-    <div class="alert alert-warning d-none" id="errorsArea" role="alert">
-        <h4 class="alert-heading"><i class="bi bi-exclamation-circle me-2"></i> Errors:</h4>
-        <ul id="errorsList"></ul>
-      </div>
 </body>
 </html>

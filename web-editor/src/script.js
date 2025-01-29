@@ -1,6 +1,9 @@
 //DATA
 const table = document.querySelector("#config tbody");
-const errorsList = document.querySelector("#errorsList");
+const errorArea = document.querySelector("#errorArea");
+const errorList = document.querySelector("#errorList");
+const verifyConfig = document.querySelector("#verifyConfig")
+
 var modal_to_detele = null;
 
 var data = [
@@ -35,7 +38,7 @@ var data = [
       type: "http",
       address: "address",
       timeout: 50,
-      status_code: "200,201",
+      status_code: "200",
       keyword: "Some words",
     },
 ];
@@ -191,20 +194,20 @@ function set_updaters() {
 
 function verify_check() {
     let check_ok = true;
-    document.querySelector("#errorsArea").classList.add("d-none");
-    document.querySelector("#errorsList").innerHTML = "";
+    errorArea.classList.add("d-none");
+    errorList.innerHTML = "";
 
     for (let i = 0; i < data.length; i++) {
         //names
         do {
             if (data[i].name === "") {
-                errorsList.innerHTML += "<li>Scan name cannot be empty</li>";
+                errorList.innerHTML += "<li>Scan name cannot be empty</li>";
                 check_ok = false;
                 break;
             }
 
             if (!/^[a-z0-9_]+$/g.test(data[i].name)) {
-                errorsList.innerHTML += "<li>Scan name can only contain lowercase letters, digits and underscores (scan name: " + data[i].name + ").</li>";
+                errorList.innerHTML += "<li>Scan name can only contain lowercase letters, digits and underscores (scan name: " + data[i].name + ").</li>";
                 check_ok = false;
                 break;
             }
@@ -214,7 +217,7 @@ function verify_check() {
                     continue;
                 }
                 if (data[j].name === data[i].name) {
-                    errorsList.innerHTML += "<li>Scan name must be unique (scan name: " + data[i].name + ").</li>";
+                    errorList.innerHTML += "<li>Scan name must be unique (scan name: " + data[i].name + ").</li>";
                     check_ok = false;
                     break;
                 }
@@ -224,7 +227,7 @@ function verify_check() {
         //address
         do {
             if (data[i].address === "") {
-                errorsList.innerHTML += "<li>Address cannot be empty (scan name: " + data[i].name + ").</li>";
+                errorList.innerHTML += "<li>Address cannot be empty (scan name: " + data[i].name + ").</li>";
                 check_ok = false;
                 break;
             }
@@ -233,13 +236,13 @@ function verify_check() {
         //timeout
         do {
             if (data[i].timeout < 0 || data[i].timeout > 30000) {
-                errorsList.innerHTML += "<li>Timeout must be between 0 and 30000 (scan name: " + data[i].name + ").</li>";
+                errorList.innerHTML += "<li>Timeout must be between 0 and 30000 (scan name: " + data[i].name + ").</li>";
                 check_ok = false;
                 break;
             }
 
             if (!Number.isInteger(data[i].timeout)) {
-                errorsList.innerHTML += "<li>Timeout must be an integer (scan name: " + data[i].name + ").</li>";
+                errorList.innerHTML += "<li>Timeout must be an integer (scan name: " + data[i].name + ").</li>";
                 check_ok = false;
                 break;
             }
@@ -253,7 +256,7 @@ function verify_check() {
                 }
 
                 if (!/^[0-9,]+$/g.test(data[i].status_code)) {
-                    errorsList.innerHTML += "<li>Status code can only contain digits and commas (scan name: " + data[i].name + ").</li>";
+                    errorList.innerHTML += "<li>Status code can only contain digits and commas (scan name: " + data[i].name + ").</li>";
                     check_ok = false;
                     break;
                 }
@@ -263,30 +266,30 @@ function verify_check() {
 
     console.log("NEW CHECK");
     if (check_ok) {
-        document.querySelector("#errorsArea").classList.add("d-none");
+        errorArea.classList.add("d-none");
     } else {
-        document.querySelector("#errorsArea").classList.remove("d-none");
+        errorArea.classList.remove("d-none");
     }
     
     verify_change(check_ok);
+    return check_ok;
 }
 
 function verify_change(state) {
     if (state) {
-        document.querySelector("#verifyConfig").classList.remove("btn-warning");
-        document.querySelector("#verifyConfig").classList.add("btn-success");
-        document.querySelector("#verifyConfig span").innerHTML = "Verification Successful";
-        document.querySelector("#verifyConfig i").classList.remove("bi-exclamation-triangle");
-        document.querySelector("#verifyConfig i").classList.add("bi-check-circle");
+        verifyConfig.classList.remove("btn-warning");
+        verifyConfig.classList.add("btn-success");
+        verifyConfig.querySelector("span").innerHTML = "Verification Successful";
+        verifyConfig.querySelector("i").classList.remove("bi-exclamation-triangle");
+        verifyConfig.querySelector("i").classList.add("bi-check-circle");
     } else {
-        document.querySelector("#verifyConfig").classList.remove("btn-success");
-        document.querySelector("#verifyConfig").classList.add("btn-warning");
-        document.querySelector("#verifyConfig span").innerHTML = "Verify Values";
-        document.querySelector("#verifyConfig i").classList.remove("bi-check-circle");
-        document.querySelector("#verifyConfig i").classList.add("bi-exclamation-triangle");
+        verifyConfig.classList.remove("btn-success");
+        verifyConfig.classList.add("btn-warning");
+        verifyConfig.querySelector("span").innerHTML = "Verify Values";
+        verifyConfig.querySelector("i").classList.remove("bi-check-circle");
+        verifyConfig.querySelector("i").classList.add("bi-exclamation-triangle");
     }
 }
-
 
 //RUNS
 render_table();
@@ -312,11 +315,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-document.querySelector("#verifyConfig").addEventListener("click", function () {
+//EVENT LISTENERS
+verifyConfig.addEventListener("click", function () {
     verify_check();
 });
 
-//EVENT LISTENERS
+document.querySelector("#downloadConfig").addEventListener("click", function () {
+    if (verify_check()) {
+        downloadConfig();
+    }
+});
+
 document.querySelector("#addRow").addEventListener("click", function () {
     data.push({
         name: "new_scan_name",
@@ -327,3 +336,28 @@ document.querySelector("#addRow").addEventListener("click", function () {
     render_table();
 });
 
+//DOWNLOAD
+
+function downloadConfig() {
+    const configContent = convertToConfig(data);
+    const blob = new Blob([configContent], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'config.conf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function convertToConfig(data) {
+    return data.map(item => {
+        let line = `${item.name} ${item.type} ${item.address} timeout=${item.timeout}`;
+        if (item.status_code) {
+            line += ` status_code=\"${item.status_code}\"`;
+        }
+        if (item.keyword) {
+            line += ` keyword=\"${item.keyword}\"`;
+        }
+        return line;
+    }).join('\n');
+}
