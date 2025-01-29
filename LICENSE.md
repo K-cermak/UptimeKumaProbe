@@ -20,4 +20,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS ORIMPLIE
 <br>
 
 ### Sources used:
+- [Enplated Framework](https://enplated.karlosoft.com/framework)
+
 - TODO

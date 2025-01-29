@@ -267,8 +267,7 @@ function verifyChange(state) {
 renderTable();
 
 window.onbeforeunload = function() {
-    //TODO remove
-    //return "Data may be lost if you leave the page, are you sure?";
+    return "Data may be lost if you leave the page, are you sure?";
 };
 
 setTimeout(function () {
