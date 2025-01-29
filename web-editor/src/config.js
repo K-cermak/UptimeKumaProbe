@@ -5,6 +5,7 @@ var enplatedSettingsCustom = {
     smartVars : {},
     dataSetter : {},
     
+    
     gdprAllowed : false,
     gdprSettings : {
         googleAnalytics : false,
