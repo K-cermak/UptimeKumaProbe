@@ -4,47 +4,19 @@ const errorArea = document.querySelector("#errorArea");
 const errorList = document.querySelector("#errorList");
 const verifyConfig = document.querySelector("#verifyConfig")
 
-var modal_to_detele = null;
+var modalToDelete = null;
 
 var data = [
     {
-      name: "service_name1",
+      name: "scan_name",
       type: "ping",
-      address: "10.0.0.4",
-      timeout: 50,
-    },
-    {
-      name: "service_name2",
-      type: "http",
-      address: "address",
-      timeout: 50,
-    },
-    {
-      name: "service_name3",
-      type: "http",
-      address: "address",
-      timeout: 50,
-      keyword: "Some words",
-    },
-    {
-      name: "service_name4",
-      type: "http",
-      address: "address",
-      timeout: 50,
-      status_code: "200,201,202",
-    },
-    {
-      name: "service_name5",
-      type: "http",
-      address: "address",
-      timeout: 50,
-      status_code: "200",
-      keyword: "Some words",
-    },
+      address: "127.0.0.1",
+      timeout: 10,
+    }
 ];
 
-function render_table() {
-    verify_change(false);
+function renderTable() {
+    verifyChange(false);
     table.innerHTML = "";
 
     for (let i = 0; i < data.length; i++) {
@@ -120,7 +92,7 @@ function render_table() {
         button.classList.add("btn", "btn-danger");
         button.innerHTML = "<i class='bi bi-x-circle'></i>";
         button.onclick = function () {
-            modal_to_detele = i;
+            modalToDelete = i;
             genModal(resetFavModal);
         };
         detele.appendChild(button);
@@ -129,11 +101,11 @@ function render_table() {
         table.appendChild(row);
     }
 
-    set_switchers();
-    set_updaters();
+    setSwitchers();
+    setUpdaters();
 }
 
-function set_switchers() {
+function setSwitchers() {
     let selects = table.querySelectorAll("select");
     for (let i = 0; i < selects.length; i++) {
         selects[i].addEventListener("change", function () {
@@ -146,16 +118,16 @@ function set_switchers() {
                 data[i].keyword = "";
             }
 
-            render_table();
+            renderTable();
         });
     }
 }
 
-function set_updaters() {
+function setUpdaters() {
     let inputs = table.querySelectorAll(".form-control");
     for (let i = 0; i < inputs.length; i++) {
         inputs[i].addEventListener("change", function () {
-            verify_change(false);
+            verifyChange(false);
 
             let row = Math.floor(i / 5);
             let col = i % 5;
@@ -192,7 +164,7 @@ function set_updaters() {
     }
 }
 
-function verify_check() {
+function verifyCheck() {
     let check_ok = true;
     errorArea.classList.add("d-none");
     errorList.innerHTML = "";
@@ -271,11 +243,11 @@ function verify_check() {
         errorArea.classList.remove("d-none");
     }
     
-    verify_change(check_ok);
+    verifyChange(check_ok);
     return check_ok;
 }
 
-function verify_change(state) {
+function verifyChange(state) {
     if (state) {
         verifyConfig.classList.remove("btn-warning");
         verifyConfig.classList.add("btn-success");
@@ -292,7 +264,7 @@ function verify_change(state) {
 }
 
 //RUNS
-render_table();
+renderTable();
 
 window.onbeforeunload = function() {
     //TODO remove
@@ -316,14 +288,27 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 //EVENT LISTENERS
-verifyConfig.addEventListener("click", function () {
-    verify_check();
+document.querySelector("#uploadConfig").addEventListener('change', event => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const content = e.target.result;
+            data = parseConfig(content);
+            renderTable();
+        };
+        reader.readAsText(file);
+    }
 });
 
 document.querySelector("#downloadConfig").addEventListener("click", function () {
-    if (verify_check()) {
+    if (verifyCheck()) {
         downloadConfig();
     }
+});
+
+verifyConfig.addEventListener("click", function () {
+    verifyCheck();
 });
 
 document.querySelector("#addRow").addEventListener("click", function () {
@@ -331,13 +316,38 @@ document.querySelector("#addRow").addEventListener("click", function () {
         name: "new_scan_name",
         type: "ping",
         address: "127.0.0.1",
-        timeout: 50,
+        timeout: 10,
     });
-    render_table();
+    renderTable();
 });
 
-//DOWNLOAD
 
+//UPLOAD
+function parseConfig(content) {
+    return content.split('\n').map(line => {
+        const parts = line.split(' ');
+        const item = {
+            name: parts[0],
+            type: parts[1],
+            address: parts[2],
+        };
+        parts.slice(3).forEach(part => {
+            const [key, value] = part.split('=');
+            if (key === 'timeout') {
+                item.timeout = parseInt(value, 10);
+            } else if (key === 'status_code') {
+                item.status_code = value.replace(/\"/g, '');
+            } else if (key === 'keyword') {
+                let position = line.indexOf("keyword");
+                item.keyword = line.slice(position + 9, -1);
+            }
+        });
+        return item;
+    });
+}
+
+
+//DOWNLOAD
 function downloadConfig() {
     const configContent = convertToConfig(data);
     const blob = new Blob([configContent], { type: 'text/plain' });

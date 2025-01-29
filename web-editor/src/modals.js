@@ -24,8 +24,8 @@ var resetFavModal = {
                 type : "danger",
                 function : "function",
                 dataset : function() {
-                    data.splice(modal_to_detele, 1);
-                    modal_to_detele = null;
+                    data.splice(modalToDelete, 1);
+                    modalToDelete = null;
                     renderTable();
                     closeModal("selector");
                 }
