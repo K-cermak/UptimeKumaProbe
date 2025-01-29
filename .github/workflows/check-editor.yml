@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Compare file dates
         run: |
@@ -22,12 +24,14 @@ jobs:
             "web-editor/src/script.js"
           )
 
-          REF_DATE=$(git log -1 --format=%ct -- "$REFERENCE_FILE" || echo 0)
+          # Získání timestampu poslední změny referenčního souboru
+          REF_DATE=$(git log -1 --format=%ct -- "$REFERENCE_FILE")
 
           echo "$REFERENCE_FILE last modified: $REF_DATE"
 
           for file in "${FILES_TO_COMPARE[@]}"; do
-            FILE_DATE=$(git log -1 --format=%ct -- "$file" || echo 0)
+            FILE_DATE=$(git log -1 --format=%ct -- "$file")
+
             echo "$file last modified: $FILE_DATE"
 
             if [ "$FILE_DATE" -gt "$REF_DATE" ]; then
