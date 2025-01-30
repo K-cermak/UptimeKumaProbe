@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 	_ "modernc.org/sqlite"
+	"UptimeKumaProbe/helpers"
 )
 
 const dbPath = "/opt/kprobe/db/db.sqlite"
@@ -18,7 +19,7 @@ func InitDatabase() {
 	if DatabaseExist() {
 		err = os.Remove(dbPath)
 		if err != nil {
-			log.Fatal("Failed to delete database:", err)
+			helpers.PrintError(true, "Failed to delete database (" + err.Error() + ")")
 		}
 	}
 
@@ -26,7 +27,7 @@ func InitDatabase() {
 
 	DB, err = sql.Open("sqlite", dbPath)
 	if err != nil {
-		log.Fatal("Failed to connect to database:", err)
+		helpers.PrintError(true, "Failed to connect to database (" + err.Error() + ")")
 	}
 
 	createTableQuery := `
@@ -38,10 +39,11 @@ func InitDatabase() {
 
 	_, err = DB.Exec(createTableQuery)
 	if err != nil {
-		log.Fatal("Failed to create table:", err)
+		helpers.PrintError(true, "Failed to create table (" + err.Error() + ")")
 	}
 
 	InsertDbValue("probe_name", "New Probe")
+	InsertDbValue("db_version", "v1.0")
 	InsertDbValue("db_init_time", time.Now().String()) 
 	InsertDbValue("config_set", "false")
 	InsertDbValue("api_port", "80")
@@ -56,7 +58,7 @@ func DatabaseExist() bool {
 	} else if errors.Is(err, os.ErrNotExist) {
 		return false
 	} else {
-		log.Fatal("Failed to check database existence:", err)
+		helpers.PrintError(true, "Failed to check database existence (" + err.Error() + ")")
 	}
 
 	return false
@@ -69,6 +71,6 @@ func InsertDbValue(key string, value string) {
 
 	_, err := DB.Exec(insertQuery, key, value, value)
 	if err != nil {
-		log.Fatal("Failed to insert data into database:", err)
+		helpers.PrintError(true, "Failed to insert data into database (" + err.Error() + ")")
 	}
 }

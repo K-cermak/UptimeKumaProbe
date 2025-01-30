@@ -1,29 +1,26 @@
 package cmd
 
 import (
+	"UptimeKumaProbe/helpers"
 	"bufio"
-	"log"
 	"os"
 	"strings"
-	"UptimeKumaProbe/helpers"
 )
 
-type ErrorMessage string
-
 const (
-	INVALID_FORMAT 	 	 ErrorMessage = "Invalid config file format"
-    DUPL_SCAN_NAME       ErrorMessage = "Duplicate scan name detected"
-	INVALID_SCAN_NAME    ErrorMessage = "Invalid scan name"
-	TIMEOUT_NOT_INT      ErrorMessage = "Timeout is not an integer"
-	TIMEOUT_OUT_OF_RANGE ErrorMessage = "Timeout out of range"
-	INVALID_CODE 	     ErrorMessage = "Invalid status code"
-	INVALID_KEYWORD      ErrorMessage = "Invalid keyword"
+	INVALID_FORMAT 	 	 string = "Invalid config file format"
+    DUPL_SCAN_NAME       string = "Duplicate scan name detected"
+	INVALID_SCAN_NAME    string = "Invalid scan name"
+	TIMEOUT_NOT_INT      string = "Timeout is not an integer"
+	TIMEOUT_OUT_OF_RANGE string = "Timeout out of range"
+	INVALID_CODE 	     string = "Invalid status code"
+	INVALID_KEYWORD      string = "Invalid keyword"
 )
 
 func VerifyConfig(path string) []string {
 	file, err := os.Open(path)
 	if err != nil {
-		log.Fatal("Failed to open file:", err)
+		helpers.PrintError(true, "Failed to open file (" + err.Error() + ")")
 	}
 	defer file.Close()
 
@@ -42,17 +39,17 @@ func VerifyConfig(path string) []string {
 			continue
 		}
 		if len(fields) < 4 {
-			log.Fatal(INVALID_FORMAT)
+			helpers.PrintError(true, INVALID_FORMAT)
 		}
 
 		scanName := fields[0]
 		if err := validateScanName(scanName, scanNames); err != "" {
-			log.Fatal("Invalid scan name:", err)
+			helpers.PrintError(true, "Invalid scan name: " + err)
 		}
 
 		scanType := fields[1]
 		if scanType != "http" && scanType != "ping" {
-			log.Fatal("Invalid scan type:", scanType)
+			helpers.PrintError(true, "Invalid scan type: " + scanType)
 		}
 
 		//scanAddress == fields[2]
@@ -60,26 +57,26 @@ func VerifyConfig(path string) []string {
 		scanTimeout := fields[3]
 		scanTimeout = strings.TrimPrefix(scanTimeout, "timeout=")
 		if err := validateScanTimeout(scanTimeout); err != "" {
-			log.Fatal("Invalid scan interval:", err)
+			helpers.PrintError(true, "Invalid scan interval: " + err)
 		}
 
 		for _, field := range fields[4:] {
 			if strings.HasPrefix(field, "status_code=") {
 				if scanType == "ping" {
-					log.Fatal("Status code is not supported for ping scans")
+					helpers.PrintError(true, "Status code is not supported for ping scans")
 				}
 
 				if err := validateStatusCode(field); err != "" {
-					log.Fatal("Invalid status code:", err)
+					helpers.PrintError(true, "Invalid status code: " + err)
 				}
 
 			} else if strings.HasPrefix(field, "keyword=") {
 				if scanType == "ping" {
-					log.Fatal("Keyword is not supported for ping scans")
+					helpers.PrintError(true, "Keyword is not supported for ping scans")
 				}
 
 				if err := validateKeyword(field); err != "" {
-					log.Fatal("Invalid keyword:", err)
+					helpers.PrintError(true, "Invalid keyword: " + err)
 				}
 			}
 		}
@@ -89,13 +86,13 @@ func VerifyConfig(path string) []string {
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal("Failed to read file:", err)
+		helpers.PrintError(true, "Failed to read file (" + err.Error() + ")")
 	}
 
 	return namesList
 }
 
-func validateScanName(scanName string, scanNames map[string]bool) ErrorMessage {
+func validateScanName(scanName string, scanNames map[string]bool) string {
 	if _, exists := scanNames[scanName]; exists {
 		return DUPL_SCAN_NAME
 	}
@@ -110,7 +107,7 @@ func validateScanName(scanName string, scanNames map[string]bool) ErrorMessage {
 	return ""
 }
 
-func validateScanTimeout(scanTimeout string) ErrorMessage {
+func validateScanTimeout(scanTimeout string) string {
 	num, correct := helpers.StrToInt(scanTimeout)
 	if !correct {
 		return TIMEOUT_NOT_INT
@@ -123,16 +120,16 @@ func validateScanTimeout(scanTimeout string) ErrorMessage {
 	return ""
 }
 
-func validateStatusCode(statusCode string) ErrorMessage {
-	statusCode = strings.TrimPrefix(statusCode, "status_code=")
+func validateStatusCode(statusCode string) string {
+	statusCode = strings.TrimPrefix(statusCode, "status_code=\"")
+	statusCode = statusCode[:len(statusCode)-1]
+
 	codes := strings.Split(statusCode, ",")
-	
 	if len(codes) == 0 {
 		return INVALID_CODE
 	}
 	
 	for _, code := range codes {
-		code = strings.TrimSpace(code)
 		if num, ok := helpers.StrToInt(code); !ok || num < 100 || num > 599 {
 			return INVALID_CODE
 		}
@@ -141,7 +138,7 @@ func validateStatusCode(statusCode string) ErrorMessage {
 	return ""
 }
 
-func validateKeyword(keyword string) ErrorMessage {
+func validateKeyword(keyword string) string {
 	if !strings.HasPrefix(keyword, "keyword=") {
 		return INVALID_KEYWORD
 	}

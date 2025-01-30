@@ -1,10 +1,26 @@
 package helpers
 
 import (
+	"os"
 	"strconv"
 )
 
-func StrToInt(str string) (int, bool) {
+func PrintInfo(info string) {
+	println("\033[0;34m[*]\033[0m " + info)
+}
+
+func PrintSuccess(success string) {
+	println("\033[0;32m[OK]\033[0m " + success)
+}
+
+func PrintError(fatal bool, err string) {
+	println("\033[0;31m[ERROR]\033[0m " + err)
+	if fatal {
+		os.Exit(1)
+	}
+}
+
+func  StrToInt(str string) (int, bool) {
 	num, err := strconv.Atoi(str)
     if err != nil {
         return 0, false
