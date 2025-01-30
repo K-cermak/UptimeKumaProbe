@@ -5,7 +5,7 @@ import (
 	"errors"
 	"log"
 	"os"
-
+	"time"
 	_ "modernc.org/sqlite"
 )
 
@@ -30,9 +30,9 @@ func InitDatabase() {
 	}
 
 	createTableQuery := `
-	CREATE TABLE IF NOT EXISTS kv_store (
-		key VARCHAR(16) PRIMARY KEY,
-		value VARCHAR(512) NOT NULL
+	CREATE TABLE IF NOT EXISTS values (
+		key VARCHAR(32) PRIMARY KEY,
+		value VARCHAR(4096) NOT NULL
 	);
 	`
 
@@ -40,6 +40,12 @@ func InitDatabase() {
 	if err != nil {
 		log.Fatal("Failed to create table:", err)
 	}
+
+	InsertDbValue("probe_name", "New Probe")
+	InsertDbValue("db_init_time", time.Now().String()) 
+	InsertDbValue("config_set", "false")
+	InsertDbValue("api_port", "80")
+	InsertDbValue("editor_endpoint", "true")
 
 	log.Println("Database initialized successfully.")
 }
@@ -54,4 +60,15 @@ func DatabaseExist() bool {
 	}
 
 	return false
+}
+
+func InsertDbValue(key string, value string) {
+	insertQuery := `
+	INSERT INTO values (key, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value=?;
+	`
+
+	_, err := DB.Exec(insertQuery, key, value, value)
+	if err != nil {
+		log.Fatal("Failed to insert data into database:", err)
+	}
 }
