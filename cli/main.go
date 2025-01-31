@@ -34,6 +34,12 @@ func main() {
 		return	
 	}
 
+	//config view
+	if (helpers.ArgsMatch(args, []string{"*", "config", "view"})) {
+		cmd.ViewConfig()
+		return
+	}
+
 	//keys view all / keys view <key>
 	if (helpers.ArgsMatch(args, []string{"*", "keys", "view", "*"})) {
 		cmd.ViewKeys(args[3])

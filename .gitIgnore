@@ -1,13 +1,13 @@
 .DS_Store
 /private
 /TODO.md
-db.sqlite
 
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
+*.sqlite
 
 *.test
 *.out

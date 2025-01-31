@@ -4,6 +4,7 @@ import (
 	"UptimeKumaProbe/db"
 	"UptimeKumaProbe/helpers"
 	"bufio"
+	"fmt"
 	"os"
 	"strings"
 )
@@ -158,7 +159,17 @@ func SetConfig(path string) {
 		}
 
 		helpers.PrintInfo("Adding scan: " + scanName)
-		db.AddScan(scanName, scanType, scanAddress, scanTimeoutInt, statusCode, keyword)
+		scan := helpers.Scan{
+			Name:       scanName,
+			Type:       scanType,
+			Address:    scanAddress,
+			Timeout:    scanTimeoutInt,
+			StatusCode: statusCode,
+			Keyword:    keyword,
+		}
+		
+		db.AddScan(scan)
+		
 		db.InsertValue("config_set", "true")
 		helpers.PrintSuccess("Scan added successfully")
 	}
@@ -168,6 +179,34 @@ func SetConfig(path string) {
 	}
 
 	helpers.PrintSuccess("Config file replaced successfully")
+}
+
+func ViewConfig() {
+	helpers.PrintInfo("Viewing config file")
+
+	if !db.DatabaseExist() {
+		helpers.PrintError(true, "Database does not exist, run <kprobe db init> first")
+	}
+
+	scans := db.GetScans()
+	if len(scans) == 0 {
+		helpers.PrintWarning("No scans found")
+		return
+	}
+
+	for _, scan := range scans {
+		fmt.Println(scan.Name)
+		fmt.Println(" -> Type: " + scan.Type)
+		fmt.Println(" -> Address: " + scan.Address)
+		fmt.Println(" -> Timeout: " + helpers.IntToStr(scan.Timeout) + "ms")
+		if scan.StatusCode != "" {
+			fmt.Println(" -> Status code(s): " + scan.StatusCode)
+		}
+		if scan.Keyword != "" {
+			fmt.Println(" -> Keyword: \"" + scan.Keyword + "\"")
+		}
+		fmt.Println()
+	}
 }
 
 func validateScanName(scanName string, scanNames map[string]bool) string {

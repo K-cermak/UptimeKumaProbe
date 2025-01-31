@@ -137,6 +137,54 @@ func InsertValue(key string, value string) {
 	}
 }
 
+func GetScans() []helpers.Scan {
+	if DB == nil {
+		connectDatabase()
+	}
+
+	var scans []helpers.Scan
+
+	query := `
+	SELECT name, type, address, timeout, status_code, keyword
+	FROM scans;
+	`
+
+	rows, err := DB.Query(query)
+	if err != nil {
+		helpers.PrintError(true, "Failed to get data from database (" + err.Error() + ")")
+	}
+
+	for rows.Next() {
+		var scan helpers.Scan
+
+		err = rows.Scan(&scan.Name, &scan.Type, &scan.Address, &scan.Timeout, &scan.StatusCode, &scan.Keyword)
+		if err != nil {
+			helpers.PrintError(true, "Failed to scan data from database (" + err.Error() + ")")
+		}
+
+		scans = append(scans, scan)
+	}
+
+	return scans
+}
+
+func AddScan(scan helpers.Scan) {
+	if DB == nil {
+		connectDatabase()
+	}
+
+	insertQuery := `
+	INSERT INTO scans (name, type, address, timeout, status_code, keyword) 
+	VALUES (?, ?, ?, ?, ?, ?);
+	`
+
+	_, err := DB.Exec(insertQuery, scan.Name, scan.Type, scan.Address, scan.Timeout, scan.StatusCode, scan.Keyword)
+	if err != nil {
+		helpers.PrintError(true, "Failed to insert data into database (" + err.Error() + ")")
+	}
+}
+
+
 func DeleteScans() {
 	if DB == nil {
 		connectDatabase()
@@ -149,21 +197,5 @@ func DeleteScans() {
 	_, err := DB.Exec(deleteQuery)
 	if err != nil {
 		helpers.PrintError(true, "Failed to delete scans from database (" + err.Error() + ")")
-	}
-}
-
-func AddScan(name string, scanType string, address string, timeout int, statusCode string, keyword string) {
-	if DB == nil {
-		connectDatabase()
-	}
-
-	insertQuery := `
-	INSERT INTO scans (name, type, address, timeout, status_code, keyword) 
-	VALUES (?, ?, ?, ?, ?, ?);
-	`
-
-	_, err := DB.Exec(insertQuery, name, scanType, address, timeout, statusCode, keyword)
-	if err != nil {
-		helpers.PrintError(true, "Failed to insert data into database (" + err.Error() + ")")
 	}
 }

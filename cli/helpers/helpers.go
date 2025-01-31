@@ -5,6 +5,15 @@ import (
 	"strconv"
 )
 
+type Scan struct {
+	Name       string
+	Type       string
+	Address    string
+	Timeout    int
+	StatusCode string
+	Keyword    string
+}
+
 func PrintInfo(info string) {
 	println("\033[0;34m[*]\033[0m " + info)
 }
@@ -35,6 +44,10 @@ func StrToInt(str string) (int, bool) {
     }
 
 	return num, true
+}
+
+func IntToStr(num int) string {
+	return strconv.Itoa(num)
 }
 
 func ArgsMatch(args []string, expectedArgs []string) bool {
