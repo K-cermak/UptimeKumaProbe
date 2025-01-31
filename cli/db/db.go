@@ -30,11 +30,39 @@ func InitDatabase() {
 	}
 
 	createTableQuery := `
-	CREATE TABLE IF NOT EXISTS keys (
+	CREATE TABLE keys (
 		name VARCHAR(32) PRIMARY KEY,
 		value VARCHAR(4096) NOT NULL
-	);
-	`
+	);`
+
+	_, err = DB.Exec(createTableQuery)
+	if err != nil {
+		helpers.PrintError(true, "Failed to create table (" + err.Error() + ")")
+	}
+
+	createTableQuery = `
+	CREATE TABLE scans (
+		name VARCHAR(32) PRIMARY KEY,
+		type VARCHAR(4) CHECK(type IN ('ping', 'http')),
+		address VARCHAR(256) NOT NULL,
+		timeout INTEGER,
+		status_code VARCHAR(256),
+		keyword TEXT
+	);`
+
+	_, err = DB.Exec(createTableQuery)
+	if err != nil {
+		helpers.PrintError(true, "Failed to create table (" + err.Error() + ")")
+	}
+
+	createTableQuery = `
+	CREATE TABLE history (
+		scan_name VARCHAR(32) NOT NULL,
+		generated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		passed BOOLEAN NOT NULL,
+		delete_after DATETIME NOT NULL,
+		PRIMARY KEY (scan_name, generated)
+	);`
 
 	_, err = DB.Exec(createTableQuery)
 	if err != nil {
