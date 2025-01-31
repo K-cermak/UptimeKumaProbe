@@ -182,8 +182,6 @@ func SetConfig(path string) {
 }
 
 func ViewConfig() {
-	helpers.PrintInfo("Viewing config file")
-
 	if !db.DatabaseExist() {
 		helpers.PrintError(true, "Database does not exist, run <kprobe db init> first")
 	}
@@ -195,7 +193,7 @@ func ViewConfig() {
 	}
 
 	for _, scan := range scans {
-		fmt.Println(scan.Name)
+		fmt.Println("\033[1m" + scan.Name + "\033[0m")
 		fmt.Println(" -> Type: " + scan.Type)
 		fmt.Println(" -> Address: " + scan.Address)
 		fmt.Println(" -> Timeout: " + helpers.IntToStr(scan.Timeout) + "ms")
