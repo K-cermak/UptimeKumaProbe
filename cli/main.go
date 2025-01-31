@@ -34,5 +34,17 @@ func main() {
 		return	
 	}
 
+	//keys view all
+	if (helpers.ArgsMatch(args, []string{"*", "keys", "view", "all"})) {
+		cmd.ViewAllKeys()
+		return
+	}
+
+	//keys view <key>
+
+	//keys set <key> <value>
+
+
+
 	helpers.PrintError(true, "Invalid command, rerun with <kprobe help> for help")
 }

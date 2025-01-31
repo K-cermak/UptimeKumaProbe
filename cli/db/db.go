@@ -75,12 +75,15 @@ func InitDatabase() {
 		helpers.PrintError(true, "Failed to create table (" + err.Error() + ")")
 	}
 
-	InsertDbValue("probe_name", "New Probe")
-	InsertDbValue("db_version", "v1.0")
-	InsertDbValue("db_init_time", time.Now().String()) 
-	InsertDbValue("config_set", "false")
-	InsertDbValue("api_port", "80")
-	InsertDbValue("editor_endpoint", "true")
+	InsertValue("probe_name", "New Probe")
+	InsertValue("db_version", "v1.0")
+	InsertValue("db_init_time", time.Now().String()) 
+	
+	InsertValue("config_set", "false")
+	InsertValue("delete_after", "7")
+
+	InsertValue("api_port", "80")
+	InsertValue("editor_endpoint", "true")
 }
 
 func DatabaseExist() bool {
@@ -95,7 +98,28 @@ func DatabaseExist() bool {
 	return false
 }
 
-func InsertDbValue(key string, value string) {
+func GetValue(key string) string {
+	if DB == nil {
+		connectDatabase()
+	}
+
+	var value string
+
+	query := `
+	SELECT value
+	FROM keys
+	WHERE name = ?;
+	`
+
+	err := DB.QueryRow(query, key).Scan(&value)
+	if err != nil {
+		helpers.PrintError(true, "Failed to get data from database (" + err.Error() + ")")
+	}
+
+	return value
+}
+
+func InsertValue(key string, value string) {
 	if DB == nil {
 		connectDatabase()
 	}

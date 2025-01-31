@@ -159,6 +159,7 @@ func SetConfig(path string) {
 
 		helpers.PrintInfo("Adding scan: " + scanName)
 		db.AddScan(scanName, scanType, scanAddress, scanTimeoutInt, statusCode, keyword)
+		db.InsertValue("config_set", "true")
 		helpers.PrintSuccess("Scan added successfully")
 	}
 
