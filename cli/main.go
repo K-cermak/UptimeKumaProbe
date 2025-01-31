@@ -34,13 +34,12 @@ func main() {
 		return	
 	}
 
-	//keys view all
-	if (helpers.ArgsMatch(args, []string{"*", "keys", "view", "all"})) {
-		cmd.ViewAllKeys()
+	//keys view all / keys view <key>
+	if (helpers.ArgsMatch(args, []string{"*", "keys", "view", "*"})) {
+		cmd.ViewKeys(args[3])
 		return
 	}
 
-	//keys view <key>
 
 	//keys set <key> <value>
 
