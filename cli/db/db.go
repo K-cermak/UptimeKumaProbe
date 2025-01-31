@@ -15,6 +15,10 @@ const dbPath = "db.sqlite" //TODO temporary, change
 var DB *sql.DB
 
 func connectDatabase() {
+	if !DatabaseExist() {
+		helpers.PrintError(true, "Database does not exist, run <kprobe db init> first")
+	}
+
 	var err error
 
 	DB, err = sql.Open("sqlite", dbPath)
@@ -33,7 +37,10 @@ func InitDatabase() {
 		}
 	}
 
-	connectDatabase()
+	DB, err = sql.Open("sqlite", dbPath)
+	if err != nil {
+		helpers.PrintError(true, "Failed to connect to database (" + err.Error() + ")")
+	}
 
 	createTableQuery := `
 	CREATE TABLE keys (
@@ -84,6 +91,8 @@ func InitDatabase() {
 
 	InsertValue("api_port", "80")
 	InsertValue("editor_endpoint", "true")
+
+	InsertValue("ping_retries", "5")
 }
 
 func DatabaseExist() bool {

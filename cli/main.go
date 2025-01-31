@@ -4,6 +4,7 @@ import (
 	"os"
 	"UptimeKumaProbe/helpers"
 	"UptimeKumaProbe/cmd"
+
 )
 
 func main() {
@@ -52,6 +53,11 @@ func main() {
 		return
 	}
 
+	//test ping <address> <timeout_ms>
+	if (helpers.ArgsMatch(args, []string{"*", "test", "ping", "*", "*"})) {
+		cmd.PingTest(args[3], args[4])
+		return
+	}
 
 	helpers.PrintError(true, "Invalid command, rerun with <kprobe help> for help")
 }

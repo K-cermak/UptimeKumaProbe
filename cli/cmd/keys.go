@@ -8,10 +8,6 @@ import (
 
 
 func ViewKeys(key string) {
-	if !db.DatabaseExist() {
-		helpers.PrintError(true, "Database does not exist, run <kprobe db init> first")
-	}
-
 	found := false
 
 	if key == "all" || key == "probe_name" {
@@ -61,7 +57,14 @@ func ViewKeys(key string) {
 		fmt.Println("\033[1m*editor_endpoint\033[0m")
 		fmt.Println(" -> " + db.GetValue("editor_endpoint"))
 		fmt.Println("    \033[3mEditor endpoint is used to enable/disable the /editor endpoint.\033[0m")
-	}	
+	}
+
+	if key == "all" || key == "ping_retries" {
+		found = true
+		fmt.Println("\033[1m*ping_retries\033[0m")
+		fmt.Println(" -> " + db.GetValue("ping_retries"))
+		fmt.Println("    \033[3mNumber of retries for ping requests.\033[0m")
+	}
 
 	if found {
 		fmt.Println("\n\033[3m(values with\033[0m \033[1m*\033[0m \033[3mcan be changed using <kprobe keys set <key> <value>> command)\033[0m")
@@ -71,22 +74,41 @@ func ViewKeys(key string) {
 }
 
 func SetKeys(key string, value string) {
-	if !db.DatabaseExist() {
-		helpers.PrintError(true, "Database does not exist, run <kprobe db init> first")
-	}
-
 	switch key {
 	case "probe_name":
+		if len(value) < 3 || len(value) > 32 {
+			helpers.PrintError(true, "Probe name must be between 3 and 32 characters")
+		}
+
 		db.InsertValue("probe_name", value)
 
 	case "delete_after":
+		if len(value) < 1 || len(value) > 36500 {
+			helpers.PrintError(true, "Delete after must be between 1 and 36500 days")
+		}
+
 		db.InsertValue("delete_after", value)
 
 	case "api_port":
+		if len(value) < 1 || len(value) > 65535 {
+			helpers.PrintError(true, "API port must be between 1 and 65535")
+		}
+
 		db.InsertValue("api_port", value)
 
 	case "editor_endpoint":
+		if value != "true" && value != "false" {
+			helpers.PrintError(true, "Editor endpoint must be true or false")
+		}
+
 		db.InsertValue("editor_endpoint", value)
+
+	case "ping_retries":
+		if len(value) < 1 || len(value) > 100 {
+			helpers.PrintError(true, "HTTP retries must be between 1 and 100")
+		}
+
+		db.InsertValue("ping_retries", value)
 
 	default:
 		helpers.PrintError(true, "Key " + key + " not found or cannot be changed")

@@ -97,10 +97,6 @@ func VerifyConfig(path string) {
 func SetConfig(path string) {
 	helpers.PrintInfo("Replacing config file")
 
-	if !db.DatabaseExist() {
-		helpers.PrintError(true, "Database does not exist, run <kprobe db init> first")
-	}
-
 	helpers.PrintQuestion("Do you want to replace the config file? (y/n)")
 	reader := bufio.NewReader(os.Stdin)
 	input, _ := reader.ReadString('\n')
@@ -182,10 +178,6 @@ func SetConfig(path string) {
 }
 
 func ViewConfig() {
-	if !db.DatabaseExist() {
-		helpers.PrintError(true, "Database does not exist, run <kprobe db init> first")
-	}
-
 	scans := db.GetScans()
 	if len(scans) == 0 {
 		helpers.PrintWarning("No scans found")
