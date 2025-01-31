@@ -1,9 +1,9 @@
 package main
 
 import (
-	"UptimeKumaProbe/cmd"
-	"UptimeKumaProbe/helpers"
 	"os"
+	"UptimeKumaProbe/helpers"
+	"UptimeKumaProbe/cmd"
 )
 
 func main() {
@@ -22,9 +22,22 @@ func main() {
 		helpers.PrintInfo("Verifying config file")
 		cmd.VerifyConfig(args[3])
 		helpers.PrintSuccess("Config file verified successfully")
+		helpers.PrintInfo("Replacing config file")
+		cmd.SetConfig(args[3])
+		helpers.PrintSuccess("Config file replaced successfully")
+		return	
+	}
 
-		//TODO
-	
+	//db init
+	if (helpers.ArgsMatch(args, []string{"*", "db", "init"})) {
+		cmd.InitDatabase()
+		return
+	}
+
+	//db reset
+	if (helpers.ArgsMatch(args, []string{"*", "db", "reset"})) {
+		cmd.ResetDatabase()
+		return
 	}
 
 	helpers.PrintError(true, "Invalid command, rerun with <kprobe help> for help")

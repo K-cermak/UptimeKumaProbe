@@ -1,10 +1,11 @@
 package cmd
 
 import (
-	"UptimeKumaProbe/helpers"
 	"bufio"
 	"os"
 	"strings"
+	"UptimeKumaProbe/helpers"
+	"UptimeKumaProbe/db"
 )
 
 const (
@@ -17,7 +18,7 @@ const (
 	INVALID_KEYWORD      string = "Invalid keyword"
 )
 
-func VerifyConfig(path string) []string {
+func VerifyConfig(path string) {
 	file, err := os.Open(path)
 	if err != nil {
 		helpers.PrintError(true, "Failed to open file (" + err.Error() + ")")
@@ -25,7 +26,6 @@ func VerifyConfig(path string) []string {
 	defer file.Close()
 
 	scanNames := make(map[string]bool)
-	var namesList []string
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -82,15 +82,23 @@ func VerifyConfig(path string) []string {
 		}
 
 		scanNames[scanName] = true
-		namesList = append(namesList, scanName)
 	}
 
 	if err := scanner.Err(); err != nil {
 		helpers.PrintError(true, "Failed to read file (" + err.Error() + ")")
 	}
-
-	return namesList
 }
+
+func SetConfig(path string) {
+	if !db.DatabaseExist() {
+		helpers.PrintError(true, "Database does not exist, run <kprobe db init> first")
+	}
+
+	//CONTROL CODE
+	//DELETE ALL SCANS
+	//ADD NEW
+}
+
 
 func validateScanName(scanName string, scanNames map[string]bool) string {
 	if _, exists := scanNames[scanName]; exists {

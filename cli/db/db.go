@@ -3,14 +3,15 @@ package db
 import (
 	"database/sql"
 	"errors"
-	"log"
 	"os"
 	"time"
 	_ "modernc.org/sqlite"
 	"UptimeKumaProbe/helpers"
 )
 
-const dbPath = "/opt/kprobe/db/db.sqlite"
+//const dbPath = "/opt/kprobe/db/db.sqlite"
+const dbPath = "db.sqlite" //TODO temporary, change
+
 var DB *sql.DB
 
 func InitDatabase() {
@@ -23,16 +24,14 @@ func InitDatabase() {
 		}
 	}
 
-	log.Println("Creating new database:", dbPath)
-
 	DB, err = sql.Open("sqlite", dbPath)
 	if err != nil {
 		helpers.PrintError(true, "Failed to connect to database (" + err.Error() + ")")
 	}
 
 	createTableQuery := `
-	CREATE TABLE IF NOT EXISTS values (
-		key VARCHAR(32) PRIMARY KEY,
+	CREATE TABLE IF NOT EXISTS keys (
+		name VARCHAR(32) PRIMARY KEY,
 		value VARCHAR(4096) NOT NULL
 	);
 	`
@@ -48,8 +47,6 @@ func InitDatabase() {
 	InsertDbValue("config_set", "false")
 	InsertDbValue("api_port", "80")
 	InsertDbValue("editor_endpoint", "true")
-
-	log.Println("Database initialized successfully.")
 }
 
 func DatabaseExist() bool {
@@ -66,10 +63,13 @@ func DatabaseExist() bool {
 
 func InsertDbValue(key string, value string) {
 	insertQuery := `
-	INSERT INTO values (key, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value=?;
+	INSERT INTO keys (name, value) 
+	VALUES (?, ?) 
+	ON CONFLICT(name) 
+	DO UPDATE SET value = excluded.value;
 	`
 
-	_, err := DB.Exec(insertQuery, key, value, value)
+	_, err := DB.Exec(insertQuery, key, value)
 	if err != nil {
 		helpers.PrintError(true, "Failed to insert data into database (" + err.Error() + ")")
 	}

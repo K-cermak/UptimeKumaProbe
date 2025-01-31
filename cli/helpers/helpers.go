@@ -13,6 +13,14 @@ func PrintSuccess(success string) {
 	println("\033[0;32m[OK]\033[0m " + success)
 }
 
+func PrintQuestion(question string) {
+	println("\033[0;36m[?]\033[0m " + question)
+}
+
+func PrintWarning(warning string) {
+	println("\033[0;33m[WARN]\033[0m " + warning)
+}
+
 func PrintError(fatal bool, err string) {
 	println("\033[0;31m[ERROR]\033[0m " + err)
 	if fatal {
