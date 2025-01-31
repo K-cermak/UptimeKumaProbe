@@ -17,6 +17,7 @@ const (
 	INVALID_CODE         string = "Invalid status code"
 	CODE_TOO_LONG        string = "Status code too long"
 	INVALID_KEYWORD      string = "Invalid keyword"
+	KEYWORD_UNSUPPORTED  string = "Keyword is not supported for ping scans"
 )
 
 func VerifyConfig(path string) {
@@ -66,25 +67,20 @@ func VerifyConfig(path string) {
 			helpers.PrintError(true, "Invalid scan interval: "+err)
 		}
 
-		for _, field := range fields[4:] {
-			if strings.HasPrefix(field, "status_code=") {
+		if len(fields) > 4 {
+			if strings.HasPrefix(fields[4], "status_code=") {
 				if scanType == "ping" {
 					helpers.PrintError(true, "Status code is not supported for ping scans")
 				}
 
-				if err := validateStatusCode(field); err != "" {
+				if err := validateStatusCode(fields[4]); err != "" {
 					helpers.PrintError(true, "Invalid status code: "+err)
 				}
-
-			} else if strings.HasPrefix(field, "keyword=") {
-				if scanType == "ping" {
-					helpers.PrintError(true, "Keyword is not supported for ping scans")
-				}
-
-				if err := validateKeyword(field); err != "" {
-					helpers.PrintError(true, "Invalid keyword: "+err)
-				}
 			}
+		}
+
+		if err := validateKeyword(line, scanType); err != "" {
+			helpers.PrintError(true, "Invalid keyword: "+err)
 		}
 
 		scanNames[scanName] = true
@@ -104,9 +100,71 @@ func SetConfig(path string) {
 		helpers.PrintError(true, "Database does not exist, run <kprobe db init> first")
 	}
 
-	//CONTROL CODE
-	//DELETE ALL SCANS
-	//ADD NEW
+	helpers.PrintQuestion("Do you want to replace the config file? (y/n)")
+	reader := bufio.NewReader(os.Stdin)
+	input, _ := reader.ReadString('\n')
+	input = strings.TrimSpace(input)
+
+	if input != "y" && input != "Y" {
+		helpers.PrintWarning("Config file replacement aborted")
+		return
+	}
+
+	helpers.PrintInfo("Deleting old config file")
+	db.DeleteScans()
+	helpers.PrintSuccess("Old config file deleted successfully")
+	helpers.PrintInfo("Adding new scans")
+
+	file, err := os.Open(path)
+	if err != nil {
+		helpers.PrintError(true, "Failed to open file ("+err.Error()+")")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" {
+			continue
+		}
+
+		fields := strings.Fields(line)
+		
+		scanName := fields[0]
+		scanType := fields[1]
+		scanAddress := fields[2]
+
+		scanTimeout := fields[3]
+		scanTimeout = strings.TrimPrefix(scanTimeout, "timeout=")
+		scanTimeoutInt, correct := helpers.StrToInt(scanTimeout)
+		if !correct {
+			helpers.PrintError(true, "Failed to convert timeout to integer")
+		}
+
+		statusCode := ""
+		keyword := ""
+
+		if len(fields) > 4 {
+			if strings.HasPrefix(fields[4], "status_code=") {
+				statusCode = fields[4]
+				statusCode = statusCode[13:len(statusCode)-1]
+			}
+		}
+
+		startIdx := strings.Index(line, "keyword=\"")
+		if startIdx != -1 {
+			endIdx := strings.LastIndex(line, "\"")
+			keyword = line[startIdx+9 : endIdx]
+		}
+
+		helpers.PrintInfo("Adding scan: " + scanName)
+		db.AddScan(scanName, scanType, scanAddress, scanTimeoutInt, statusCode, keyword)
+		helpers.PrintSuccess("Scan added successfully")
+	}
+
+	if err := scanner.Err(); err != nil {
+		helpers.PrintError(true, "Failed to read file ("+err.Error()+")")
+	}
 
 	helpers.PrintSuccess("Config file replaced successfully")
 }
@@ -161,17 +219,17 @@ func validateStatusCode(statusCode string) string {
 	return ""
 }
 
-func validateKeyword(keyword string) string {
-	if !strings.HasPrefix(keyword, "keyword=") {
-		return INVALID_KEYWORD
-	}
-
-	startIdx := strings.Index(keyword, "\"")
+func validateKeyword(line string, scanType string) string {
+	startIdx := strings.Index(line, "keyword=\"")
 	if startIdx == -1 {
-		return INVALID_KEYWORD
+		return ""
 	}
 
-	endIdx := strings.LastIndex(keyword, "\"")
+	if scanType == "ping" {
+		return KEYWORD_UNSUPPORTED
+	}
+
+	endIdx := strings.LastIndex(line, "\"")
 	if endIdx == startIdx {
 		return INVALID_KEYWORD
 	}

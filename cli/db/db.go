@@ -1,18 +1,27 @@
 package db
 
 import (
+	"UptimeKumaProbe/helpers"
 	"database/sql"
 	"errors"
 	"os"
 	"time"
 	_ "modernc.org/sqlite"
-	"UptimeKumaProbe/helpers"
 )
 
 //const dbPath = "/opt/kprobe/db/db.sqlite"
 const dbPath = "db.sqlite" //TODO temporary, change
 
 var DB *sql.DB
+
+func connectDatabase() {
+	var err error
+
+	DB, err = sql.Open("sqlite", dbPath)
+	if err != nil {
+		helpers.PrintError(true, "Failed to connect to database (" + err.Error() + ")")
+	}
+}
 
 func InitDatabase() {
 	var err error
@@ -24,10 +33,7 @@ func InitDatabase() {
 		}
 	}
 
-	DB, err = sql.Open("sqlite", dbPath)
-	if err != nil {
-		helpers.PrintError(true, "Failed to connect to database (" + err.Error() + ")")
-	}
+	connectDatabase()
 
 	createTableQuery := `
 	CREATE TABLE keys (
@@ -90,6 +96,10 @@ func DatabaseExist() bool {
 }
 
 func InsertDbValue(key string, value string) {
+	if DB == nil {
+		connectDatabase()
+	}
+
 	insertQuery := `
 	INSERT INTO keys (name, value) 
 	VALUES (?, ?) 
@@ -98,6 +108,37 @@ func InsertDbValue(key string, value string) {
 	`
 
 	_, err := DB.Exec(insertQuery, key, value)
+	if err != nil {
+		helpers.PrintError(true, "Failed to insert data into database (" + err.Error() + ")")
+	}
+}
+
+func DeleteScans() {
+	if DB == nil {
+		connectDatabase()
+	}
+
+	deleteQuery := `
+	DELETE FROM scans;
+	`
+
+	_, err := DB.Exec(deleteQuery)
+	if err != nil {
+		helpers.PrintError(true, "Failed to delete scans from database (" + err.Error() + ")")
+	}
+}
+
+func AddScan(name string, scanType string, address string, timeout int, statusCode string, keyword string) {
+	if DB == nil {
+		connectDatabase()
+	}
+
+	insertQuery := `
+	INSERT INTO scans (name, type, address, timeout, status_code, keyword) 
+	VALUES (?, ?, ?, ?, ?, ?);
+	`
+
+	_, err := DB.Exec(insertQuery, name, scanType, address, timeout, statusCode, keyword)
 	if err != nil {
 		helpers.PrintError(true, "Failed to insert data into database (" + err.Error() + ")")
 	}
