@@ -20,13 +20,6 @@ func ViewKeys(key string) {
 		fmt.Println(" -> " + db.GetValue("probe_name"))
 		fmt.Println("    \033[3mProbe name is used to identify the probe in the API requests.\033[0m")
 	}
-
-	if key == "all" || key == "probe_name" {
-		found = true
-		fmt.Println("\033[1m*probe_name\033[0m")
-		fmt.Println(" -> " + db.GetValue("probe_name"))
-		fmt.Println("    \033[3mProbe name is used to identify the probe in the API requests.\033[0m")
-	}
 	
 	if key == "all" || key == "db_version" {
 		found = true
@@ -75,5 +68,29 @@ func ViewKeys(key string) {
 	} else {
 		helpers.PrintError(true, "Key " + key + " not found")
 	}
+}
 
+func SetKeys(key string, value string) {
+	if !db.DatabaseExist() {
+		helpers.PrintError(true, "Database does not exist, run <kprobe db init> first")
+	}
+
+	switch key {
+	case "probe_name":
+		db.InsertValue("probe_name", value)
+
+	case "delete_after":
+		db.InsertValue("delete_after", value)
+
+	case "api_port":
+		db.InsertValue("api_port", value)
+
+	case "editor_endpoint":
+		db.InsertValue("editor_endpoint", value)
+
+	default:
+		helpers.PrintError(true, "Key " + key + " not found or cannot be changed")
+	}
+
+	helpers.PrintSuccess("Key " + key + " updated to " + value)
 }

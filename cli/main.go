@@ -40,9 +40,11 @@ func main() {
 		return
 	}
 
-
 	//keys set <key> <value>
-
+	if (helpers.ArgsMatch(args, []string{"*", "keys", "set", "*", "*"})) {
+		cmd.SetKeys(args[3], args[4])
+		return
+	}
 
 
 	helpers.PrintError(true, "Invalid command, rerun with <kprobe help> for help")
