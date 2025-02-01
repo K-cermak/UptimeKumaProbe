@@ -39,9 +39,9 @@ func PrintError(fatal bool, err string) {
 
 func StrToInt(str string) (int, bool) {
 	num, err := strconv.Atoi(str)
-    if err != nil {
-        return 0, false
-    }
+	if err != nil {
+		return 0, false
+	}
 
 	return num, true
 }

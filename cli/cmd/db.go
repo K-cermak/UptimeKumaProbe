@@ -1,11 +1,11 @@
 package cmd
 
 import (
+	"UptimeKumaProbe/db"
+	"UptimeKumaProbe/helpers"
 	"bufio"
 	"os"
 	"strings"
-	"UptimeKumaProbe/db"
-	"UptimeKumaProbe/helpers"
 )
 
 func InitDatabase() {

@@ -126,7 +126,7 @@ func SetConfig(path string) {
 		}
 
 		fields := strings.Fields(line)
-		
+
 		scanName := fields[0]
 		scanType := fields[1]
 		scanAddress := fields[2]
@@ -144,7 +144,7 @@ func SetConfig(path string) {
 		if len(fields) > 4 {
 			if strings.HasPrefix(fields[4], "status_code=") {
 				statusCode = fields[4]
-				statusCode = statusCode[13:len(statusCode)-1]
+				statusCode = statusCode[13 : len(statusCode)-1]
 			}
 		}
 
@@ -163,9 +163,9 @@ func SetConfig(path string) {
 			StatusCode: statusCode,
 			Keyword:    keyword,
 		}
-		
+
 		db.AddScan(scan)
-		
+
 		db.InsertValue("config_set", "true")
 		helpers.PrintSuccess("Scan added successfully")
 	}

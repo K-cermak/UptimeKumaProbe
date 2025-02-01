@@ -1,18 +1,18 @@
 package utils
 
 import (
-	"fmt"
-	"time"
-	"UptimeKumaProbe/helpers"
 	"UptimeKumaProbe/db"
+	"UptimeKumaProbe/helpers"
+	"fmt"
 	"github.com/prometheus-community/pro-bing"
+	"time"
 )
 
 func PingAddress(address string, timeout int, output bool) bool {
 	pinger, err := probing.NewPinger(address)
 	if err != nil {
 		if output {
-			helpers.PrintError(false, "Error creating ping command (" + err.Error() + ")")
+			helpers.PrintError(false, "Error creating ping command ("+err.Error()+")")
 		}
 
 		return false
@@ -35,7 +35,7 @@ func PingAddress(address string, timeout int, output bool) bool {
 	err = pinger.Run()
 	if err != nil {
 		if output {
-			helpers.PrintError(false, "Error running ping command (" + err.Error() + ")")
+			helpers.PrintError(false, "Error running ping command ("+err.Error()+")")
 		}
 		return false
 	}

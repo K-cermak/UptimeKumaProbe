@@ -1,66 +1,65 @@
 package main
 
 import (
-	"os"
-	"UptimeKumaProbe/helpers"
 	"UptimeKumaProbe/cmd"
-
+	"UptimeKumaProbe/helpers"
+	"os"
 )
 
 func main() {
 	args := os.Args
 
 	//db init
-	if (helpers.ArgsMatch(args, []string{"*", "db", "init"})) {
+	if helpers.ArgsMatch(args, []string{"*", "db", "init"}) {
 		cmd.InitDatabase()
 		return
 	}
 
 	//db reset
-	if (helpers.ArgsMatch(args, []string{"*", "db", "reset"})) {
+	if helpers.ArgsMatch(args, []string{"*", "db", "reset"}) {
 		cmd.ResetDatabase()
 		return
 	}
 
 	//config verify <path>
-	if (helpers.ArgsMatch(args, []string{"*", "config", "verify", "*"})) {
+	if helpers.ArgsMatch(args, []string{"*", "config", "verify", "*"}) {
 		cmd.VerifyConfig(args[3])
 		return
 	}
 
 	//config replace <path>
-	if (helpers.ArgsMatch(args, []string{"*", "config", "replace", "*"})) {
+	if helpers.ArgsMatch(args, []string{"*", "config", "replace", "*"}) {
 		cmd.VerifyConfig(args[3])
 		cmd.SetConfig(args[3])
-		return	
+		return
 	}
 
 	//config view
-	if (helpers.ArgsMatch(args, []string{"*", "config", "view"})) {
+	if helpers.ArgsMatch(args, []string{"*", "config", "view"}) {
 		cmd.ViewConfig()
 		return
 	}
 
 	//keys view all / keys view <key>
-	if (helpers.ArgsMatch(args, []string{"*", "keys", "view", "*"})) {
+	if helpers.ArgsMatch(args, []string{"*", "keys", "view", "*"}) {
 		cmd.ViewKeys(args[3])
 		return
 	}
 
 	//keys set <key> <value>
-	if (helpers.ArgsMatch(args, []string{"*", "keys", "set", "*", "*"})) {
+	if helpers.ArgsMatch(args, []string{"*", "keys", "set", "*", "*"}) {
 		cmd.SetKeys(args[3], args[4])
 		return
 	}
 
 	//test ping <address> <timeout_ms>
-	if (helpers.ArgsMatch(args, []string{"*", "test", "ping", "*", "*"})) {
+	if helpers.ArgsMatch(args, []string{"*", "test", "ping", "*", "*"}) {
 		cmd.PingTest(args[3], args[4])
 		return
 	}
 
 	//test http <address> <timeout_ms>
-	if (helpers.ArgsMatch(args, []string{"*", "test", "http", "*", "*"})) {
+	if helpers.ArgsMatch(args, []string{"*", "test", "http", "*", "*"}) {
 		cmd.HttpTest(args[3], args[4])
 		return
 	}

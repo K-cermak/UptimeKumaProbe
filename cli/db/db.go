@@ -4,12 +4,12 @@ import (
 	"UptimeKumaProbe/helpers"
 	"database/sql"
 	"errors"
+	_ "modernc.org/sqlite"
 	"os"
 	"time"
-	_ "modernc.org/sqlite"
 )
 
-//const dbPath = "/opt/kprobe/db/db.sqlite"
+// const dbPath = "/opt/kprobe/db/db.sqlite"
 const dbPath = "db.sqlite" //TODO temporary, change
 
 var DB *sql.DB
@@ -23,7 +23,7 @@ func connectDatabase() {
 
 	DB, err = sql.Open("sqlite", dbPath)
 	if err != nil {
-		helpers.PrintError(true, "Failed to connect to database (" + err.Error() + ")")
+		helpers.PrintError(true, "Failed to connect to database ("+err.Error()+")")
 	}
 }
 
@@ -33,13 +33,13 @@ func InitDatabase() {
 	if DatabaseExist() {
 		err = os.Remove(dbPath)
 		if err != nil {
-			helpers.PrintError(true, "Failed to delete database (" + err.Error() + ")")
+			helpers.PrintError(true, "Failed to delete database ("+err.Error()+")")
 		}
 	}
 
 	DB, err = sql.Open("sqlite", dbPath)
 	if err != nil {
-		helpers.PrintError(true, "Failed to connect to database (" + err.Error() + ")")
+		helpers.PrintError(true, "Failed to connect to database ("+err.Error()+")")
 	}
 
 	createTableQuery := `
@@ -50,7 +50,7 @@ func InitDatabase() {
 
 	_, err = DB.Exec(createTableQuery)
 	if err != nil {
-		helpers.PrintError(true, "Failed to create table (" + err.Error() + ")")
+		helpers.PrintError(true, "Failed to create table ("+err.Error()+")")
 	}
 
 	createTableQuery = `
@@ -65,7 +65,7 @@ func InitDatabase() {
 
 	_, err = DB.Exec(createTableQuery)
 	if err != nil {
-		helpers.PrintError(true, "Failed to create table (" + err.Error() + ")")
+		helpers.PrintError(true, "Failed to create table ("+err.Error()+")")
 	}
 
 	createTableQuery = `
@@ -79,13 +79,13 @@ func InitDatabase() {
 
 	_, err = DB.Exec(createTableQuery)
 	if err != nil {
-		helpers.PrintError(true, "Failed to create table (" + err.Error() + ")")
+		helpers.PrintError(true, "Failed to create table ("+err.Error()+")")
 	}
 
 	InsertValue("probe_name", "New Probe")
 	InsertValue("db_version", "v1.0")
-	InsertValue("db_init_time", time.Now().String()) 
-	
+	InsertValue("db_init_time", time.Now().String())
+
 	InsertValue("config_set", "false")
 	InsertValue("delete_after", "7")
 
@@ -101,7 +101,7 @@ func DatabaseExist() bool {
 	} else if errors.Is(err, os.ErrNotExist) {
 		return false
 	} else {
-		helpers.PrintError(true, "Failed to check database existence (" + err.Error() + ")")
+		helpers.PrintError(true, "Failed to check database existence ("+err.Error()+")")
 	}
 
 	return false
@@ -122,7 +122,7 @@ func GetValue(key string) string {
 
 	err := DB.QueryRow(query, key).Scan(&value)
 	if err != nil {
-		helpers.PrintError(true, "Failed to get data from database (" + err.Error() + ")")
+		helpers.PrintError(true, "Failed to get data from database ("+err.Error()+")")
 	}
 
 	return value
@@ -142,7 +142,7 @@ func InsertValue(key string, value string) {
 
 	_, err := DB.Exec(insertQuery, key, value)
 	if err != nil {
-		helpers.PrintError(true, "Failed to insert data into database (" + err.Error() + ")")
+		helpers.PrintError(true, "Failed to insert data into database ("+err.Error()+")")
 	}
 }
 
@@ -160,7 +160,7 @@ func GetScans() []helpers.Scan {
 
 	rows, err := DB.Query(query)
 	if err != nil {
-		helpers.PrintError(true, "Failed to get data from database (" + err.Error() + ")")
+		helpers.PrintError(true, "Failed to get data from database ("+err.Error()+")")
 	}
 
 	for rows.Next() {
@@ -168,7 +168,7 @@ func GetScans() []helpers.Scan {
 
 		err = rows.Scan(&scan.Name, &scan.Type, &scan.Address, &scan.Timeout, &scan.StatusCode, &scan.Keyword)
 		if err != nil {
-			helpers.PrintError(true, "Failed to scan data from database (" + err.Error() + ")")
+			helpers.PrintError(true, "Failed to scan data from database ("+err.Error()+")")
 		}
 
 		scans = append(scans, scan)
@@ -189,10 +189,9 @@ func AddScan(scan helpers.Scan) {
 
 	_, err := DB.Exec(insertQuery, scan.Name, scan.Type, scan.Address, scan.Timeout, scan.StatusCode, scan.Keyword)
 	if err != nil {
-		helpers.PrintError(true, "Failed to insert data into database (" + err.Error() + ")")
+		helpers.PrintError(true, "Failed to insert data into database ("+err.Error()+")")
 	}
 }
-
 
 func DeleteScans() {
 	if DB == nil {
@@ -205,6 +204,6 @@ func DeleteScans() {
 
 	_, err := DB.Exec(deleteQuery)
 	if err != nil {
-		helpers.PrintError(true, "Failed to delete scans from database (" + err.Error() + ")")
+		helpers.PrintError(true, "Failed to delete scans from database ("+err.Error()+")")
 	}
 }

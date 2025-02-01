@@ -17,7 +17,7 @@ func CheckHTTP(url string, timeout int, output bool, acceptCodes string, keyword
 	resp, err := client.Get(url)
 	if err != nil {
 		if output {
-			helpers.PrintError(false, "Error performing HTTP request (" + err.Error() + ")")
+			helpers.PrintError(false, "Error performing HTTP request ("+err.Error()+")")
 		}
 		return false
 	}
@@ -26,7 +26,7 @@ func CheckHTTP(url string, timeout int, output bool, acceptCodes string, keyword
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		if output {
-			helpers.PrintError(false, "Error reading response body (" + err.Error() + ")")
+			helpers.PrintError(false, "Error reading response body ("+err.Error()+")")
 		}
 		return false
 	}
@@ -47,7 +47,7 @@ func CheckHTTP(url string, timeout int, output bool, acceptCodes string, keyword
 
 		if !foundCode {
 			if output {
-				helpers.PrintError(false, "Invalid status code received (" + string(resp.StatusCode) + ")")
+				helpers.PrintError(false, "Invalid status code received ("+string(resp.StatusCode)+")")
 			}
 			return false
 		}
