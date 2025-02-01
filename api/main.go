@@ -35,7 +35,6 @@ func main() {
 		allowedEditor = "true"
 	}
 
-
 	r := chi.NewRouter()
 
 	if allowedEditor == "true" {

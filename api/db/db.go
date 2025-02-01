@@ -10,10 +10,10 @@ import (
 )
 
 const (
-	DB_CONNECTION_FAILED   string = "Failed to connect to database"
-	DB_QUERY_FAILED        string = "Failed to get value from database"
-	DB_SCAN_NEWEST_FAILED  string = "Failed to get newest scan from database"
-	RES_OK				   string = "OK"
+	DB_CONNECTION_FAILED  string = "Failed to connect to database"
+	DB_QUERY_FAILED       string = "Failed to get value from database"
+	DB_SCAN_NEWEST_FAILED string = "Failed to get newest scan from database"
+	RES_OK                string = "OK"
 )
 
 // const dbPath = "/opt/kprobe/db/db.sqlite"

@@ -1,8 +1,8 @@
 package endpoints
 
 import (
-	"UptimeKumaProbeAPI/helpers"
 	"UptimeKumaProbeAPI/db"
+	"UptimeKumaProbeAPI/helpers"
 	"encoding/json"
 	"net/http"
 	"path/filepath"
@@ -12,10 +12,10 @@ import (
 
 type StatusResponse struct {
 	ProbeName string `json:"probe_name"`
-	Time     string `json:"time"`
-	ScanName string `json:"scan_name"`
-	ScanTime string `json:"check"`
-	Status   string `json:"status"`
+	Time      string `json:"time"`
+	ScanName  string `json:"scan_name"`
+	ScanTime  string `json:"check"`
+	Status    string `json:"status"`
 }
 
 func ServeEditor(w http.ResponseWriter, r *http.Request) {
@@ -58,9 +58,9 @@ func ServeStatus(w http.ResponseWriter, r *http.Request, probeName string) {
 	resp := StatusResponse{
 		ProbeName: probeName,
 		Time:      helpers.GetCurrTime(),
-		ScanName: scanName,
-		ScanTime:    data.Generated,
-		Status:   helpers.BoolToString(data.Passed),
+		ScanName:  scanName,
+		ScanTime:  data.Generated,
+		Status:    helpers.BoolToString(data.Passed),
 	}
 
 	helpers.PrintSuccess("Served status for scan " + scanName)
