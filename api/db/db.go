@@ -1,10 +1,11 @@
 package db
 
 import (
+	"UptimeKumaProbeAPI/helpers"
 	"database/sql"
 	"errors"
 	"os"
-	"UptimeKumaProbeAPI/helpers"
+
 	_ "modernc.org/sqlite"
 )
 
@@ -35,6 +36,19 @@ func connectDatabase() bool {
 	}
 
 	return true
+}
+
+func closeDatabase() {
+	if DB == nil {
+		return
+	}
+
+	err := DB.Close()
+	if err != nil {
+		helpers.PrintError("Failed to close database connection (" + err.Error() + ")")
+	}
+
+	DB = nil
 }
 
 func DatabaseExist() bool {
@@ -70,6 +84,7 @@ func GetValue(key string) (string, string) {
 		return "", DB_QUERY_FAILED
 	}
 
+	closeDatabase()
 	return value, RES_OK
 }
 
@@ -99,5 +114,6 @@ func GetScanNewest(scanName string) (helpers.ScanRes, string) {
 		return helpers.ScanRes{}, DB_CONNECTION_FAILED
 	}
 
+	closeDatabase()
 	return res, RES_OK
 }
