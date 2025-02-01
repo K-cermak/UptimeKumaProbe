@@ -42,13 +42,13 @@ func PingAddress(address string, timeout int, output bool) bool {
 
 	stats := pinger.Statistics()
 	if output {
-		fmt.Printf("PING Stats to %s", address)
-		fmt.Printf("\n -> Sent: %d", stats.PacketsSent)
-		fmt.Printf("\n -> Received: %d", stats.PacketsRecv)
-		fmt.Printf("\n -> Lost: %f (%.2f%% loss)", stats.PacketLoss, stats.PacketLoss)
-		fmt.Printf("\n -> Min RTT: %s", stats.MinRtt)
-		fmt.Printf("\n -> Max RTT: %s", stats.MaxRtt)
-		fmt.Printf("\n -> Avg RTT: %s\n", stats.AvgRtt)
+		fmt.Println("\033[1mPING Stats to " + address + "\033[0m")
+		fmt.Printf(" -> Sent: %d\n", stats.PacketsSent)
+		fmt.Printf(" -> Received: %d\n", stats.PacketsRecv)
+		fmt.Printf(" -> Lost: %f (%.2f%% loss)\n", stats.PacketLoss, stats.PacketLoss)
+		fmt.Printf(" -> Min RTT: %s\n", stats.MinRtt)
+		fmt.Printf(" -> Max RTT: %s\n", stats.MaxRtt)
+		fmt.Printf(" -> Avg RTT: %s\n", stats.AvgRtt)
 	}
 
 	return stats.PacketLoss < 20

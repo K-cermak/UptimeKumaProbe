@@ -59,5 +59,11 @@ func main() {
 		return
 	}
 
+	//test http <address> <timeout_ms>
+	if (helpers.ArgsMatch(args, []string{"*", "test", "http", "*", "*"})) {
+		cmd.HttpTest(args[3], args[4])
+		return
+	}
+
 	helpers.PrintError(true, "Invalid command, rerun with <kprobe help> for help")
 }
