@@ -10,7 +10,7 @@ import (
 )
 
 // const dbPath = "/opt/kprobe/db/db.sqlite"
-const dbPath = "db.sqlite" //TODO temporary, change
+const dbPath = "db.sqlite" //FOR TESTING, CHANGE TO ABOVE
 
 var DB *sql.DB
 

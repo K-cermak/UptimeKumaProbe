@@ -24,7 +24,6 @@ jobs:
             "web-editor/src/script.js"
           )
 
-          # Získání timestampu poslední změny referenčního souboru
           REF_DATE=$(git log -1 --format=%ct -- "$REFERENCE_FILE")
 
           echo "$REFERENCE_FILE last modified: $REF_DATE"
@@ -41,3 +40,21 @@ jobs:
           done
 
           echo "✅ All files are older than $REFERENCE_FILE. Test passed."
+
+      - name: Check editor.html modification date
+        run: |
+          EDITOR_FILE="api/endpoints/editor.html"
+          REF_FILE="web-editor/probe-editor.html"
+
+          EDITOR_DATE=$(git log -1 --format=%ct -- "$EDITOR_FILE")
+          REF_DATE=$(git log -1 --format=%ct -- "$REF_FILE")
+
+          echo "$EDITOR_FILE last modified: $EDITOR_DATE"
+          echo "$REF_FILE last modified: $REF_DATE"
+
+          if [ "$EDITOR_DATE" -lt "$REF_DATE" ]; then
+            echo "❌ $EDITOR_FILE is older than $REF_FILE. Test failed."
+            exit 1
+          fi
+
+          echo "✅ $EDITOR_FILE is newer or the same age as $REF_FILE. Test passed."

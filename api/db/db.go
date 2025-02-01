@@ -3,7 +3,6 @@ package db
 import (
 	"database/sql"
 	"errors"
-	"log"
 	"os"
 	"UptimeKumaProbeAPI/helpers"
 	_ "modernc.org/sqlite"
@@ -17,13 +16,13 @@ const (
 )
 
 // const dbPath = "/opt/kprobe/db/db.sqlite"
-const dbPath = "../cli/db.sqlite" //TODO temporary, change
+const dbPath = "../cli/db.sqlite" //FOR TESTING, CHANGE TO ABOVE
 
 var DB *sql.DB
 
 func connectDatabase() bool {
 	if !DatabaseExist() {
-		log.Println("[ERROR] Database does not exist, run CLI app with <kprobe db init> first")
+		helpers.PrintError("Database does not exist, run CLI app with <kprobe db init> first")
 		return false
 	}
 
@@ -31,7 +30,7 @@ func connectDatabase() bool {
 
 	DB, err = sql.Open("sqlite", dbPath)
 	if err != nil {
-		log.Println("[ERROR] Failed to connect to database (" + err.Error() + ")")
+		helpers.PrintError("Failed to connect to database")
 		return false
 	}
 
@@ -44,7 +43,7 @@ func DatabaseExist() bool {
 	} else if errors.Is(err, os.ErrNotExist) {
 		return false
 	} else {
-		log.Println("[ERROR] Failed to check database existence (" + err.Error() + ")")
+		helpers.PrintError("Failed to check database existence (" + err.Error() + ")")
 	}
 
 	return false
@@ -67,7 +66,7 @@ func GetValue(key string) (string, string) {
 
 	err := DB.QueryRow(query, key).Scan(&value)
 	if err != nil {
-		log.Println("[ERROR] Failed to get value from database (" + err.Error() + ")")
+		helpers.PrintError("Failed to get value from database (" + err.Error() + ")")
 		return "", DB_QUERY_FAILED
 	}
 
@@ -94,10 +93,10 @@ func GetScanNewest(scanName string) (helpers.ScanRes, string) {
 	err := DB.QueryRow(query, scanName).Scan(&res.Generated, &res.Passed)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return helpers.ScanRes{}, RES_OK
+			return helpers.ScanRes{}, DB_SCAN_NEWEST_FAILED
 		}
-		log.Println("[ERROR] Failed to get data from database (" + err.Error() + ")")
-		return helpers.ScanRes{}, DB_SCAN_NEWEST_FAILED
+		helpers.PrintError("Failed to get data from database (" + err.Error() + ")")
+		return helpers.ScanRes{}, DB_CONNECTION_FAILED
 	}
 
 	return res, RES_OK
