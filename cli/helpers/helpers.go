@@ -16,7 +16,7 @@ type Scan struct {
 
 type ScanRes struct {
 	Generated string
-	Passed bool
+	Passed    bool
 }
 
 func PrintInfo(info string) {

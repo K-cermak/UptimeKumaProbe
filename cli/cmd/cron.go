@@ -14,13 +14,13 @@ func CronStart(command string) {
 
 	if len(scansSlice) == 0 {
 		helpers.PrintError(true, "No scans found in database, add some via <kprobe config replace <path>>")
-	} 
-	
+	}
+
 	for _, scan := range scansSlice {
 		scansMap[scan.Name] = false
 	}
 
-	if (command == "all") {
+	if command == "all" {
 		for _, scan := range scansSlice {
 			scansMap[scan.Name] = true
 		}
@@ -63,7 +63,7 @@ func CronStart(command string) {
 
 	for _, scan := range scansSlice {
 		if scansMap[scan.Name] {
-			scanCount++;
+			scanCount++
 		}
 	}
 
@@ -117,12 +117,12 @@ func CronStart(command string) {
 		}
 	}
 
-	if (scanSuccessfull == scanCount) {
+	if scanSuccessfull == scanCount {
 		helpers.PrintSuccess("All " + helpers.IntToStr(scanCount) + " scan(s) finished successfully")
-	} else if (scanSuccessfull > 0) {
+	} else if scanSuccessfull > 0 {
 		helpers.PrintWarning("Only " + helpers.IntToStr(scanSuccessfull) + " out of " + helpers.IntToStr(scanCount) + " scan(s) finished successfully")
 	} else {
-		helpers.PrintError(true, "All " + helpers.IntToStr(scanCount) + " scan(s) finished with errors")
+		helpers.PrintError(true, "All "+helpers.IntToStr(scanCount)+" scan(s) finished with errors")
 	}
 
 	helpers.PrintInfo("Deleting old scan results")

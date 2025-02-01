@@ -48,7 +48,7 @@ func CheckHTTP(url string, timeout int, acceptCodes string, keyword string, outp
 
 		if !foundCode {
 			if output {
-				helpers.PrintError(false, "Invalid status code received (" + helpers.IntToStr(resp.StatusCode) + ")")
+				helpers.PrintError(false, "Invalid status code received ("+helpers.IntToStr(resp.StatusCode)+")")
 			}
 			return false
 		}
