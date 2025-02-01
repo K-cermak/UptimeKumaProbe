@@ -207,3 +207,37 @@ func DeleteScans() {
 		helpers.PrintError(true, "Failed to delete scans from database ("+err.Error()+")")
 	}
 }
+
+func AddScanRes(scanName string, passed bool) {
+	if DB == nil {
+		connectDatabase()
+	}
+
+	daysToDelete := GetValue("delete_after")
+
+	insertQuery := `
+	INSERT INTO history (scan_name, passed, delete_after) 
+	VALUES (?, ?, datetime('now', '+' || ? || ' days'));
+	`
+
+	_, err := DB.Exec(insertQuery, scanName, passed, daysToDelete)
+	if err != nil {
+		helpers.PrintError(true, "Failed to insert data into database ("+err.Error()+")")
+	}
+}
+
+func DeleteOldScanRes() {
+	if DB == nil {
+		connectDatabase()
+	}
+
+	deleteQuery := `
+	DELETE FROM history
+	WHERE delete_after < datetime('now');
+	`
+
+	_, err := DB.Exec(deleteQuery)
+	if err != nil {
+		helpers.PrintError(true, "Failed to delete old results from database ("+err.Error()+")")
+	}
+}

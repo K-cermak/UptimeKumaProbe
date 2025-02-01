@@ -27,7 +27,7 @@ func HttpTest(address string, timeout string) {
 	}
 
 	helpers.PrintInfo("Performing HTTP request to " + address + " with timeout " + timeout + " ms")
-	ret := utils.CheckHTTP(address, count, true, "", "")
+	ret := utils.CheckHTTP(address, count, "", "", true)
 	if ret {
 		helpers.PrintSuccess("HTTP request successful")
 	} else {

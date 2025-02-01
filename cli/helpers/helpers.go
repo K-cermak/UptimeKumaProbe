@@ -50,6 +50,14 @@ func IntToStr(num int) string {
 	return strconv.Itoa(num)
 }
 
+func BoolToState(state bool) string {
+	if state {
+		return "\033[0;32mSuccess\033[0m"
+	}
+
+	return "\033[0;31mFailed\033[0m"
+}
+
 func ArgsMatch(args []string, expectedArgs []string) bool {
 	if len(args) != len(expectedArgs) {
 		return false

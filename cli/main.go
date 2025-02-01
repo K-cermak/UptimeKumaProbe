@@ -9,6 +9,12 @@ import (
 func main() {
 	args := os.Args
 
+	//cron <type>
+	if helpers.ArgsMatch(args, []string{"*", "cron", "*"}) {
+		cmd.CronStart(args[2])
+		return
+	}
+
 	//db init
 	if helpers.ArgsMatch(args, []string{"*", "db", "init"}) {
 		cmd.InitDatabase()

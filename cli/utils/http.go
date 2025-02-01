@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func CheckHTTP(url string, timeout int, output bool, acceptCodes string, keyword string) bool {
+func CheckHTTP(url string, timeout int, acceptCodes string, keyword string, output bool) bool {
 	client := http.Client{
 		Timeout: time.Duration(timeout) * time.Millisecond,
 	}
@@ -41,13 +41,14 @@ func CheckHTTP(url string, timeout int, output bool, acceptCodes string, keyword
 			}
 
 			if resp.StatusCode == codeInt {
+				foundCode = true
 				break
 			}
 		}
 
 		if !foundCode {
 			if output {
-				helpers.PrintError(false, "Invalid status code received ("+string(resp.StatusCode)+")")
+				helpers.PrintError(false, "Invalid status code received (" + helpers.IntToStr(resp.StatusCode) + ")")
 			}
 			return false
 		}
