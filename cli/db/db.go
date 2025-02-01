@@ -208,6 +208,39 @@ func DeleteScans() {
 	}
 }
 
+func GetScanRes(scanName string, start string, end string) []helpers.ScanRes {
+	if DB == nil {
+		connectDatabase()
+	}
+
+	var scanRes []helpers.ScanRes
+
+	query := `
+	SELECT generated, passed
+	FROM history
+	WHERE scan_name = ? AND generated BETWEEN ? AND ?
+	ORDER BY generated DESC;
+	`
+
+	rows, err := DB.Query(query, scanName, start, end)
+	if err != nil {
+		helpers.PrintError(true, "Failed to get data from database ("+err.Error()+")")
+	}
+
+	for rows.Next() {
+		var res helpers.ScanRes
+
+		err = rows.Scan(&res.Generated, &res.Passed)
+		if err != nil {
+			helpers.PrintError(true, "Failed to scan data from database ("+err.Error()+")")
+		}
+
+		scanRes = append(scanRes, res)
+	}
+
+	return scanRes
+}
+
 func AddScanRes(scanName string, passed bool) {
 	if DB == nil {
 		connectDatabase()

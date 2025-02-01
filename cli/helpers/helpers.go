@@ -14,6 +14,11 @@ type Scan struct {
 	Keyword    string
 }
 
+type ScanRes struct {
+	Generated string
+	Passed bool
+}
+
 func PrintInfo(info string) {
 	println("\033[0;34m[*]\033[0m " + info)
 }
