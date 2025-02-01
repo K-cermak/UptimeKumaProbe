@@ -178,6 +178,12 @@ function verifyCheck() {
                 break;
             }
 
+            if (data[i].name.length > 32) {
+                errorList.innerHTML += "<li>Scan name must be less than 32 characters (scan name: " + data[i].name + ").</li>";
+                check_ok = false;
+                break;
+            }
+
             if (!/^[a-z0-9_]+$/g.test(data[i].name)) {
                 errorList.innerHTML += "<li>Scan name can only contain lowercase letters, digits and underscores (scan name: " + data[i].name + ").</li>";
                 check_ok = false;
@@ -203,6 +209,14 @@ function verifyCheck() {
                 check_ok = false;
                 break;
             }
+
+            //if longer than 256 characters
+            if (data[i].address.length > 256) {
+                errorList.innerHTML += "<li>Address must be less than 256 characters (scan name: " + data[i].name + ").</li>";
+                check_ok = false;
+                break;
+            }
+
         } while (false);
 
         //timeout
@@ -227,10 +241,26 @@ function verifyCheck() {
                     break;
                 }
 
+                if (data[i].status_code.length > 256) {
+                    errorList.innerHTML += "<li>Status code must be less than 256 characters (scan name: " + data[i].name + ").</li>";
+                    check_ok = false;
+                    break;
+                }
+
                 if (!/^[0-9,]+$/g.test(data[i].status_code)) {
                     errorList.innerHTML += "<li>Status code can only contain digits and commas (scan name: " + data[i].name + ").</li>";
                     check_ok = false;
                     break;
+                }
+
+                let codes = data[i].status_code.split(",");
+                for (let j = 0; j < codes.length; j++) {
+                    let code = parseInt(codes[j]);
+                    if (code < 100 || code > 599 || !Number.isInteger(code)) {
+                        errorList.innerHTML += "<li>Status code must be an integer between 100 and 599 (scan name: " + data[i].name + ").</li>";
+                        check_ok = false;
+                        break;
+                    }
                 }
             }
         } while (false);
