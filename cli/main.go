@@ -76,5 +76,11 @@ func main() {
 		return
 	}
 
+	//test api <service/http>
+	if helpers.ArgsMatch(args, []string{"*", "test", "api", "*"}) {
+		cmd.ApiTest(args[3])
+		return
+	}
+
 	helpers.PrintError(true, "Invalid command, rerun with <kprobe help> for help")
 }

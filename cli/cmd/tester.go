@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"UptimeKumaProbe/db"
 	"UptimeKumaProbe/helpers"
 	"UptimeKumaProbe/utils"
+	"os/exec"
+	"runtime"
 )
 
 func PingTest(address string, timeout string) {
@@ -32,5 +35,33 @@ func HttpTest(address string, timeout string) {
 		helpers.PrintSuccess("HTTP request successful")
 	} else {
 		helpers.PrintWarning("HTTP request failed")
+	}
+}
+
+func ApiTest(testType string) {
+	if testType != "service" && testType != "http" {
+		helpers.PrintError(true, "Invalid type, expected <service> or <http>")
+	}
+
+	if testType == "http" {
+		apiPort := db.GetValue("api_port")
+		HttpTest("http://127.0.0.1:"+apiPort, "5000")
+
+	} else if testType == "service" {
+		if runtime.GOOS != "linux" {
+			helpers.PrintError(true, "This service testing is only available on Linux")
+		}
+
+		cmd := exec.Command("systemctl", "is-active", "kprobe")
+		output, err := cmd.CombinedOutput()
+		if err != nil {
+			helpers.PrintError(true, "Failed to check service status ("+err.Error()+")")
+		}
+
+		if string(output) == "active\n" {
+			helpers.PrintSuccess("Service is active")
+		} else {
+			helpers.PrintWarning("Service is not active")
+		}
 	}
 }
