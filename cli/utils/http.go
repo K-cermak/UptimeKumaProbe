@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"UptimeKumaProbe/helpers"
+	"UptimeKumaProbeCLI/helpers"
 	"fmt"
 	"io"
 	"net/http"

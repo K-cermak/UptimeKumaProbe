@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"UptimeKumaProbe/db"
-	"UptimeKumaProbe/helpers"
-	"UptimeKumaProbe/utils"
+	"UptimeKumaProbeCLI/db"
+	"UptimeKumaProbeCLI/helpers"
+	"UptimeKumaProbeCLI/utils"
 	"os/exec"
 	"runtime"
 )

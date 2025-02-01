@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"UptimeKumaProbe/db"
-	"UptimeKumaProbe/helpers"
+	"UptimeKumaProbeCLI/db"
+	"UptimeKumaProbeCLI/helpers"
 	"bufio"
 	"fmt"
 	"os"

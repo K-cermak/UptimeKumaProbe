@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"UptimeKumaProbe/db"
-	"UptimeKumaProbe/helpers"
+	"UptimeKumaProbeCLI/db"
+	"UptimeKumaProbeCLI/helpers"
 	"fmt"
 	"github.com/prometheus-community/pro-bing"
 	"time"

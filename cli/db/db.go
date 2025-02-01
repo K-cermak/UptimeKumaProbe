@@ -1,7 +1,7 @@
 package db
 
 import (
-	"UptimeKumaProbe/helpers"
+	"UptimeKumaProbeCLI/helpers"
 	"database/sql"
 	"errors"
 	_ "modernc.org/sqlite"

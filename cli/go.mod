@@ -1,4 +1,4 @@
-module UptimeKumaProbe
+module UptimeKumaProbeCLI
 
 go 1.23.5
 

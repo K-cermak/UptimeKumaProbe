@@ -1,8 +1,8 @@
 package main
 
 import (
-	"UptimeKumaProbe/cmd"
-	"UptimeKumaProbe/helpers"
+	"UptimeKumaProbeCLI/cmd"
+	"UptimeKumaProbeCLI/helpers"
 	"os"
 )
 
