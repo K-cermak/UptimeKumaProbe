@@ -65,3 +65,17 @@ func ApiTest(testType string) {
 		}
 	}
 }
+
+func ApiRestart() {
+	if runtime.GOOS != "linux" {
+		helpers.PrintError(true, "This service testing is only available on Linux")
+	}
+
+	cmd := exec.Command("systemctl", "restart", "kprobe")
+	err := cmd.Run()
+	if err != nil {
+		helpers.PrintError(true, "Failed to restart service ("+err.Error()+"). Tip: Use 'sudo' to run the command")
+	}
+
+	helpers.PrintSuccess("Service restarted")
+}

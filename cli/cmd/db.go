@@ -26,6 +26,7 @@ func InitDatabase() {
 	helpers.PrintInfo("Initializing database")
 	db.InitDatabase()
 	helpers.PrintSuccess("Database initialized successfully")
+	helpers.PrintInfo("You should now run <sudo kprobe api restart> to apply the changes")
 }
 
 func ResetDatabase() {
@@ -46,4 +47,5 @@ func ResetDatabase() {
 	helpers.PrintInfo("Resetting database")
 	db.InitDatabase()
 	helpers.PrintSuccess("Database reset successfully")
+	helpers.PrintInfo("You should now run <sudo kprobe api restart> to apply the changes")
 }

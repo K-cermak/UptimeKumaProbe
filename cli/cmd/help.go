@@ -47,6 +47,8 @@ func PrintHelp() {
 	fmt.Println(" \033[1m-> keys view <key>\033[0m")
 	fmt.Println("    \033[3mView the value of the specified key.\033[0m")
 	fmt.Println("    \033[3mIf the key has the * prefix, it can be changed.\033[0m")
+	fmt.Println(" \033[1m-> keys set <key> <value>\033[0m")
+	fmt.Println("    \033[3mSet the value of the specified key.\033[0m")
 
 	fmt.Println("\n \033[1m-> test ping <address> <timeout_ms>\033[0m")
 	fmt.Println("    \033[3mTest the ping to the specified address with the specified timeout.\033[0m")
@@ -54,10 +56,14 @@ func PrintHelp() {
 	fmt.Println(" \033[1m-> test http <address> <timeout_ms>\033[0m")
 	fmt.Println("    \033[3mTest the http request to the specified address with the specified timeout.\033[0m")
 	fmt.Println("    \033[3mTimeout is in milliseconds.\033[0m")
-	fmt.Println(" \033[1m-> test api [service|http]\033[0m")
+
+	fmt.Println("\n \033[1m-> api test [service|http]\033[0m")
 	fmt.Println("    \033[3mTest the api service or the http service.\033[0m")
 	fmt.Println("    \033[3mUse 'service' to test the api service via systemctl.\033[0m")
 	fmt.Println("    \033[3mUse 'http' to test the api service via http request.\033[0m")
+	fmt.Println(" \033[1m-> api restart\033[0m")
+	fmt.Println("    \033[3mRestart the api service.\033[0m")
+	fmt.Println("    \033[3mThis command requires sudo privileges.\033[0m")
 
 	fmt.Println("\n \033[1m-> help\033[0m")
 	fmt.Println("    \033[3mPrint this help message.\033[0m")

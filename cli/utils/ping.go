@@ -28,7 +28,7 @@ func PingAddress(address string, timeout int, output bool) bool {
 		return false
 	}
 
-	pinger.SetPrivileged(true)
+	//pinger.SetPrivileged(true)
 	pinger.Count = count
 	pinger.Timeout = time.Duration(timeout) * time.Millisecond
 

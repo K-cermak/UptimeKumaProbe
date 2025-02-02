@@ -71,4 +71,8 @@ systemctl daemon-reload
 systemctl enable kprobe.service
 systemctl start kprobe.service
 
+echo "Enabling unprivileged ping via UDP"
+sysctl -w net.ipv4.ping_group_range="0 2147483647"
+
 echo "[SUCCESS] Uptime Kuma Probe Extension has been installed successfully, you can now run 'kprobe' command to start the CLI"
+echo "Tip: You can delete this folder, all important files are copied to $INSTALL_DIR"

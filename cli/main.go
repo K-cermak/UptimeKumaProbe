@@ -76,9 +76,15 @@ func main() {
 		return
 	}
 
-	//test api [service|http]
-	if helpers.ArgsMatch(args, []string{"*", "test", "api", "*"}) {
+	//api test [service|http]
+	if helpers.ArgsMatch(args, []string{"*", "api", "test", "*"}) {
 		cmd.ApiTest(args[3])
+		return
+	}
+
+	//api restart
+	if helpers.ArgsMatch(args, []string{"*", "api", "restart"}) {
+		cmd.ApiRestart()
 		return
 	}
 
