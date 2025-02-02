@@ -93,6 +93,7 @@ func InitDatabase() {
 	InsertValue("editor_endpoint", "true")
 
 	InsertValue("ping_retries", "5")
+	InsertValue("ignore ", "5")
 }
 
 func DatabaseExist() bool {

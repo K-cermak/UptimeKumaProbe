@@ -16,7 +16,7 @@ jobs:
 
       - name: Compare file dates
         run: |
-          REFERENCE_FILE="web-editor/probe-editor.html"
+          REFERENCE_FILE="web-editor/editor.html"
           FILES_TO_COMPARE=(
             "web-editor/src/config.js"
             "web-editor/src/index.html"
