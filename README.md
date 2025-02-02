@@ -36,6 +36,8 @@ git clone https://github.com/K-cermak/UptimeKumaProbe
 
 ```
 cd UptimeKumaProbe/scripts
-chmod +x uninstall.sh
 sudo ./uninstall.sh
 ```
+
+- If this last command fails, try run:
+```chmod +x uninstall.sh```
