@@ -80,7 +80,7 @@ func SetKeys(key string, value string) {
 		}
 
 		db.InsertValue("probe_name", value)
-		helpers.PrintInfo("You should now run <sudo kprobe api restart> to apply the changes")
+		helpers.PrintInfo("You should now run <sudo kprobe api restart> to apply some changes")
 
 	case "delete_after":
 		if len(value) < 1 || len(value) > 36500 {
@@ -95,7 +95,7 @@ func SetKeys(key string, value string) {
 		}
 
 		db.InsertValue("api_port", value)
-		helpers.PrintInfo("You should now run <sudo kprobe api restart> to apply the changes")
+		helpers.PrintInfo("You should now run <sudo kprobe api restart> to apply some changes")
 
 	case "editor_endpoint":
 		if value != "true" && value != "false" {
@@ -103,7 +103,7 @@ func SetKeys(key string, value string) {
 		}
 
 		db.InsertValue("editor_endpoint", value)
-		helpers.PrintInfo("You should now run <sudo kprobe api restart> to apply the changes")
+		helpers.PrintInfo("You should now run <sudo kprobe api restart> to apply some changes")
 
 	case "ping_retries":
 		if len(value) < 1 || len(value) > 100 {

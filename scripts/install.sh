@@ -1,5 +1,5 @@
 #!/bin/bash
-## Tip: If you cannot run this script, try running `chmod +x installer.sh`
+## Tip: If you cannot run this script, try running `chmod +x install.sh`
 
 set -e
 

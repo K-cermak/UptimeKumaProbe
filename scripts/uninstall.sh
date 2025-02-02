@@ -1,5 +1,5 @@
 #!/bin/bash
-## Tip: If you cannot run this script, try running `chmod +x uninstaller.sh`
+## Tip: If you cannot run this script, try running `chmod +x uninstall.sh`
 
 set -e
 
