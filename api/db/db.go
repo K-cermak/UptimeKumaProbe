@@ -16,8 +16,8 @@ const (
 	RES_OK                string = "OK"
 )
 
-// const dbPath = "/opt/kprobe/db/db.sqlite"
-const dbPath = "../cli/db.sqlite" //FOR TESTING, CHANGE TO ABOVE
+const dbPath = "/opt/kprobe/db.sqlite"
+//const dbPath = "../cli/db.sqlite" //FOR TESTING, CHANGE TO ABOVE
 
 var DB *sql.DB
 
