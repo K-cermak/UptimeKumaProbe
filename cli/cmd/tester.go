@@ -29,8 +29,14 @@ func HttpTest(address string, timeout string) {
 		helpers.PrintError(true, "Invalid timeout value")
 	}
 
+	ignoreSslStr := db.GetValue("ignore_ssl_errors")
+	ignoreSsl := false
+	if ignoreSslStr == "true" {
+		ignoreSsl = true
+	}
+
 	helpers.PrintInfo("Performing HTTP request to " + address + " with timeout " + timeout + " ms")
-	ret := utils.CheckHTTP(address, count, "", "", true)
+	ret := utils.CheckHTTP(address, count, "", "", ignoreSsl, true)
 	if ret {
 		helpers.PrintSuccess("HTTP request successful")
 	} else {

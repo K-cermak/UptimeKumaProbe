@@ -73,6 +73,12 @@ func CronStart(command string) {
 
 	helpers.PrintInfo("Starting cron job for " + helpers.IntToStr(scanCount) + " scan(s)")
 
+	ignoreSslStr := db.GetValue("ignore_ssl_errors")
+	ignoreSsl := false
+	if ignoreSslStr == "true" {
+		ignoreSsl = true
+	}
+
 	scanResults := make(map[string]bool)
 	var mu sync.Mutex
 	var wg sync.WaitGroup
@@ -93,7 +99,7 @@ func CronStart(command string) {
 			if s.Type == "ping" {
 				result = utils.PingAddress(s.Address, s.Timeout, false)
 			} else if s.Type == "http" {
-				result = utils.CheckHTTP(s.Address, s.Timeout, s.StatusCode, s.Keyword, false)
+				result = utils.CheckHTTP(s.Address, s.Timeout, s.StatusCode, s.Keyword, ignoreSsl, false)
 			}
 
 			helpers.PrintSuccess("Scan " + s.Name + " finished (" + helpers.BoolToState(result) + ")")

@@ -65,6 +65,13 @@ func ViewKeys(key string) {
 		fmt.Println("    \033[3mNumber of retries for ping requests.\033[0m")
 	}
 
+	if key == "all" || key == "ignore_ssl_errors" {
+		found = true
+		fmt.Println("\033[1m*ignore_ssl_errors\033[0m")
+		fmt.Println(" -> " + db.GetValue("ignore_ssl_errors"))
+		fmt.Println("    \033[3mIgnore SSL errors is used to ignore TLS (SSL) errors in the HTTP requests.\033[0m")
+	}
+
 	if found {
 		fmt.Println("\n\033[3m(values with\033[0m \033[1m*\033[0m \033[3mcan be changed using <kprobe keys set <key> <value>> command)\033[0m")
 	} else {
@@ -111,6 +118,13 @@ func SetKeys(key string, value string) {
 		}
 
 		db.InsertValue("ping_retries", value)
+
+	case "ignore_ssl_errors":
+		if value != "true" && value != "false" {
+			helpers.PrintError(true, "Ignore SSL errors must be true or false")
+		}
+
+		db.InsertValue("ignore_ssl_errors", value)
 
 	default:
 		helpers.PrintError(true, "Key "+key+" not found or cannot be changed")

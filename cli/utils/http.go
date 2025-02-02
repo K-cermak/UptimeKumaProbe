@@ -2,6 +2,7 @@ package utils
 
 import (
 	"UptimeKumaProbeCLI/helpers"
+	"crypto/tls"
 	"fmt"
 	"io"
 	"net/http"
@@ -9,9 +10,14 @@ import (
 	"time"
 )
 
-func CheckHTTP(url string, timeout int, acceptCodes string, keyword string, output bool) bool {
+func CheckHTTP(url string, timeout int, acceptCodes string, keyword string, ignoreSslErrors bool, output bool) bool {
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: ignoreSslErrors},
+	}
+	
 	client := http.Client{
 		Timeout: time.Duration(timeout) * time.Millisecond,
+		Transport: tr,
 	}
 
 	resp, err := client.Get(url)
