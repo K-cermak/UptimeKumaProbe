@@ -250,7 +250,7 @@ func AddScanRes(scanName string, passed bool) {
 
 	insertQuery := `
 	INSERT INTO history (scan_name, passed, delete_after) 
-	VALUES (?, ?, datetime('now', '+' || ? || ' days'));
+	VALUES (?, ?, datetime('now', 'localtime', '+' || ? || ' days'));
 	`
 
 	_, err := DB.Exec(insertQuery, scanName, passed, daysToDelete)
@@ -266,7 +266,7 @@ func DeleteOldScanRes() {
 
 	deleteQuery := `
 	DELETE FROM history
-	WHERE delete_after < datetime('now');
+	WHERE delete_after < datetime('now', 'localtime');
 	`
 
 	_, err := DB.Exec(deleteQuery)
