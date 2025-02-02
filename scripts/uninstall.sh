@@ -35,4 +35,8 @@ rm -f "$SYMLINK"
 
 rm -rf "$INSTALL_DIR"
 
+echo "Disabling unprivileged ping via UDP"
+rm -f /etc/sysctl.d/99-ping.conf
+sysctl --system
+
 echo "[SUCCESS] Uptime Kuma Probe Extension has been uninstalled successfully"
