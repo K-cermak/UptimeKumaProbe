@@ -5,7 +5,6 @@ import (
 )
 
 func PrintHelp() {
-
 	fmt.Println("\033[1m+------------------------+\033[0m")
 	fmt.Println("\033[1m| UptimeKuma - Probe CLI |\033[0m")
 	fmt.Println("\033[1m+------------------------+\033[0m")

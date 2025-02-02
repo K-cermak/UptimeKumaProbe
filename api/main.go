@@ -1,12 +1,13 @@
 package main
 
 import (
-	"UptimeKumaProbeAPI/db"
-	"UptimeKumaProbeAPI/endpoints"
-	"UptimeKumaProbeAPI/helpers"
 	"encoding/json"
 	"log"
 	"net/http"
+
+	"UptimeKumaProbeAPI/db"
+	"UptimeKumaProbeAPI/endpoints"
+	"UptimeKumaProbeAPI/helpers"
 
 	"github.com/go-chi/chi/v5"
 )

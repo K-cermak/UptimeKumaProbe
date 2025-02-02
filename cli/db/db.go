@@ -1,16 +1,18 @@
 package db
 
 import (
-	"UptimeKumaProbeCLI/helpers"
 	"database/sql"
 	"errors"
-	_ "modernc.org/sqlite"
 	"os"
 	"time"
+
+	"UptimeKumaProbeCLI/helpers"
+
+	_ "modernc.org/sqlite"
 )
 
+// const dbPath = "db.sqlite" //FOR TESTING, CHANGE TO BELOW
 const dbPath = "/opt/kprobe/db.sqlite"
-//const dbPath = "db.sqlite" //FOR TESTING, CHANGE TO ABOVE
 
 var DB *sql.DB
 

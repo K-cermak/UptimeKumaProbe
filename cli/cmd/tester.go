@@ -1,11 +1,12 @@
 package cmd
 
 import (
+	"os/exec"
+	"runtime"
+
 	"UptimeKumaProbeCLI/db"
 	"UptimeKumaProbeCLI/helpers"
 	"UptimeKumaProbeCLI/utils"
-	"os/exec"
-	"runtime"
 )
 
 func PingTest(address string, timeout string) {

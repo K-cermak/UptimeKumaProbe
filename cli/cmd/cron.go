@@ -1,11 +1,12 @@
 package cmd
 
 import (
+	"strings"
+	"sync"
+
 	"UptimeKumaProbeCLI/db"
 	"UptimeKumaProbeCLI/helpers"
 	"UptimeKumaProbeCLI/utils"
-	"strings"
-	"sync"
 )
 
 func CronStart(command string) {
@@ -24,7 +25,6 @@ func CronStart(command string) {
 		for _, scan := range scansSlice {
 			scansMap[scan.Name] = true
 		}
-
 	} else if strings.HasPrefix(command, "all_except:") {
 		excludedNames := strings.Split(strings.TrimPrefix(command, "all_except:"), ",")
 

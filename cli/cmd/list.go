@@ -1,9 +1,10 @@
 package cmd
 
 import (
+	"fmt"
+
 	"UptimeKumaProbeCLI/db"
 	"UptimeKumaProbeCLI/helpers"
-	"fmt"
 )
 
 func ViewScanInfo(scanName string, start string, end string) {

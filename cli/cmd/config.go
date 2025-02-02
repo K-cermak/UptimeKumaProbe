@@ -1,12 +1,13 @@
 package cmd
 
 import (
-	"UptimeKumaProbeCLI/db"
-	"UptimeKumaProbeCLI/helpers"
 	"bufio"
 	"fmt"
 	"os"
 	"strings"
+
+	"UptimeKumaProbeCLI/db"
+	"UptimeKumaProbeCLI/helpers"
 )
 
 const (

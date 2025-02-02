@@ -1,11 +1,11 @@
 package db
 
 import (
-	"UptimeKumaProbeAPI/helpers"
 	"database/sql"
 	"errors"
 	"os"
 
+	"UptimeKumaProbeAPI/helpers"
 	_ "modernc.org/sqlite"
 )
 
@@ -16,8 +16,8 @@ const (
 	RES_OK                string = "OK"
 )
 
+// const dbPath = "../cli/db.sqlite" //FOR TESTING, CHANGE TO BELOW
 const dbPath = "/opt/kprobe/db.sqlite"
-//const dbPath = "../cli/db.sqlite" //FOR TESTING, CHANGE TO ABOVE
 
 var DB *sql.DB
 
@@ -107,7 +107,7 @@ func GetScanNewest(scanName string) (helpers.ScanRes, string) {
 
 	err := DB.QueryRow(query, scanName).Scan(&res.Generated, &res.Passed)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return helpers.ScanRes{}, DB_SCAN_NEWEST_FAILED
 		}
 		helpers.PrintError("Failed to get data from database (" + err.Error() + ")")

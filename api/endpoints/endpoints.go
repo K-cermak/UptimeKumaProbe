@@ -1,10 +1,11 @@
 package endpoints
 
 import (
-	"UptimeKumaProbeAPI/db"
-	"UptimeKumaProbeAPI/helpers"
 	"encoding/json"
 	"net/http"
+
+	"UptimeKumaProbeAPI/db"
+	"UptimeKumaProbeAPI/helpers"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -18,8 +19,8 @@ type StatusResponse struct {
 }
 
 func ServeEditor(w http.ResponseWriter, r *http.Request) {
+	// htmlPath := "../../web-editor/editor.html" //FOR TESTING, CHANGE TO BELOW
 	htmlPath := "/opt/kprobe/editor.html"
-	//htmlPath := "../../web-editor/editor.html" //FOR TESTING, CHANGE TO ABOVE
 	http.ServeFile(w, r, htmlPath)
 }
 
