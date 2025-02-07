@@ -38,6 +38,16 @@ func main() {
 
 	r := chi.NewRouter()
 
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		jsonResponse := map[string]interface{}{
+			"ProbeName": ProbeName,
+			"Time":      helpers.GetCurrTime(),
+		}
+		json.NewEncoder(w).Encode(jsonResponse)
+	})
+
 	if allowedEditor == "true" {
 		r.Get("/editor", endpoints.ServeEditor)
 	}
