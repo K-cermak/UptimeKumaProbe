@@ -15,7 +15,7 @@ cd UptimeKumaProbe/scripts
 sudo ./install.sh
 ```
 
-- If this last command fails, try run:
+- If the last command fails, try run:
 ```chmod +x install.sh```
 
 - Tip: You can now remove the `UptimeKumaProbe` directory.
@@ -39,5 +39,5 @@ cd UptimeKumaProbe/scripts
 sudo ./uninstall.sh
 ```
 
-- If this last command fails, try run:
+- If the last command fails, try run:
 ```chmod +x uninstall.sh```

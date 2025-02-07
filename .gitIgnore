@@ -1,6 +1,7 @@
 .DS_Store
 /private
 /TODO.md
+/images
 
 *.exe
 *.exe~

@@ -222,7 +222,7 @@ func GetScanRes(scanName string, start string, end string) []helpers.ScanRes {
 	SELECT generated, passed
 	FROM history
 	WHERE scan_name = ? AND generated BETWEEN ? AND ?
-	ORDER BY generated DESC;
+	ORDER BY generated ASC;
 	`
 
 	rows, err := DB.Query(query, scanName, start, end)
