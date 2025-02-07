@@ -277,3 +277,29 @@ func DeleteOldScanRes() {
 		helpers.PrintError(true, "Failed to delete old results from database ("+err.Error()+")")
 	}
 }
+
+func GetScanNewest(scanName string) (helpers.ScanRes, bool) {
+	if DB == nil {
+		connectDatabase()
+	}
+
+	query := `
+	SELECT generated, passed
+	FROM history
+	WHERE scan_name = ?
+	ORDER BY generated DESC
+	LIMIT 1;
+	`
+
+	var res helpers.ScanRes
+
+	err := DB.QueryRow(query, scanName).Scan(&res.Generated, &res.Passed)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return helpers.ScanRes{}, false
+		}
+		helpers.PrintError(true, "Failed to get data from database ("+err.Error()+")")
+	}
+
+	return res, true
+}

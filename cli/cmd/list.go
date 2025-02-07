@@ -7,6 +7,25 @@ import (
 	"UptimeKumaProbeCLI/helpers"
 )
 
+func ViewCurrentState() {
+	scans := db.GetScans()
+	if len(scans) == 0 {
+		helpers.PrintWarning("No scans found")
+		return
+	}
+
+	for _, scan := range scans {
+		fmt.Println("\033[1m" + scan.Name + "\033[0m")
+
+		state, success := db.GetScanNewest(scan.Name)
+		if !success {
+			fmt.Println(" -> State: Unknown")
+		} else {
+			fmt.Println(" -> " + helpers.BoolToState(state.Passed) + " (" + state.Generated + ")")
+		}
+	}
+}
+
 func ViewScanInfo(scanName string, start string, end string) {
 	data := db.GetScanRes(scanName, start, end)
 	if len(data) == 0 {

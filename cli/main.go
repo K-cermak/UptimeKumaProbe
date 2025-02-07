@@ -16,6 +16,12 @@ func main() {
 		return
 	}
 
+	// state
+	if helpers.ArgsMatch(args, []string{"*", "state"}) {
+		cmd.ViewCurrentState()
+		return
+	}
+
 	// history <scan_name> <from> <to>
 	if helpers.ArgsMatch(args, []string{"*", "history", "*", "*", "*"}) {
 		cmd.ViewScanInfo(args[2], args[3], args[4])

@@ -23,6 +23,9 @@ func PrintHelp() {
 	fmt.Println("    \033[3mUse 'all_except:<names>' to start all cron jobs except the specified ones (seperate names with comma without space).\033[0m")
 	fmt.Println("    \033[3mUse 'only:<names>' to start only the specified cron jobs (seperate names with comma without space).\033[0m")
 
+	fmt.Println("\n \033[1m-> state\033[0m")
+	fmt.Println("    \033[3mView the current state of the scans.\033[0m")
+
 	fmt.Println("\n \033[1m-> history <scan_name> <from> <to>\033[0m")
 	fmt.Println("    \033[3mView the history of the specified scan.\033[0m")
 	fmt.Println("    \033[3mFor <from> and <to> use the format 'YYYY-MM-DD HH:MM:SS'.\033[0m")
