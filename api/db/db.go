@@ -19,39 +19,32 @@ const (
 // const dbPath = "../cli/db.sqlite" //FOR TESTING, CHANGE TO BELOW
 const dbPath = "/opt/kprobe/db.sqlite"
 
-var DB *sql.DB
-
-func connectDatabase() bool {
-	if !DatabaseExist() {
+func getDatabaseConnection() (*sql.DB) {
+	if !databaseExist() {
 		helpers.PrintError("Database does not exist, run CLI app with <kprobe db init> first")
-		return false
+		return nil
 	}
 
-	var err error
-
-	DB, err = sql.Open("sqlite", dbPath)
+	db, err := sql.Open("sqlite", dbPath)
 	if err != nil {
 		helpers.PrintError("Failed to connect to database")
-		return false
+		return nil
 	}
 
-	return true
+	return db
 }
 
-func closeDatabase() {
-	if DB == nil {
+func closeDatabase(db *sql.DB) {
+	if db == nil {
 		return
 	}
 
-	err := DB.Close()
-	if err != nil {
+	if err := db.Close(); err != nil {
 		helpers.PrintError("Failed to close database connection (" + err.Error() + ")")
 	}
-
-	DB = nil
 }
 
-func DatabaseExist() bool {
+func databaseExist() bool {
 	if _, err := os.Stat(dbPath); err == nil {
 		return true
 	} else if errors.Is(err, os.ErrNotExist) {
@@ -64,36 +57,33 @@ func DatabaseExist() bool {
 }
 
 func GetValue(key string) (string, string) {
-	if DB == nil {
-		if !connectDatabase() {
-			return "", DB_CONNECTION_FAILED
-		}
+	db := getDatabaseConnection()
+	if db == nil {
+		return "", DB_CONNECTION_FAILED
 	}
+	defer closeDatabase(db)
 
 	var value string
-
 	query := `
 	SELECT value
 	FROM keys
-	WHERE name = ?;
-	`
+	WHERE name = ?;`
 
-	err := DB.QueryRow(query, key).Scan(&value)
+	err := db.QueryRow(query, key).Scan(&value)
 	if err != nil {
 		helpers.PrintError("Failed to get value from database (" + err.Error() + ")")
 		return "", DB_QUERY_FAILED
 	}
 
-	closeDatabase()
 	return value, RES_OK
 }
 
 func GetScanNewest(scanName string) (helpers.ScanRes, string) {
-	if DB == nil {
-		if !connectDatabase() {
-			return helpers.ScanRes{}, DB_CONNECTION_FAILED
-		}
+	db := getDatabaseConnection()
+	if db == nil {
+		return helpers.ScanRes{}, DB_CONNECTION_FAILED
 	}
+	defer closeDatabase(db)
 
 	query := `
 	SELECT generated, passed
@@ -105,7 +95,7 @@ func GetScanNewest(scanName string) (helpers.ScanRes, string) {
 
 	var res helpers.ScanRes
 
-	err := DB.QueryRow(query, scanName).Scan(&res.Generated, &res.Passed)
+	err := db.QueryRow(query, scanName).Scan(&res.Generated, &res.Passed)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return helpers.ScanRes{}, DB_SCAN_NEWEST_FAILED
@@ -114,6 +104,5 @@ func GetScanNewest(scanName string) (helpers.ScanRes, string) {
 		return helpers.ScanRes{}, DB_CONNECTION_FAILED
 	}
 
-	closeDatabase()
 	return res, RES_OK
 }
